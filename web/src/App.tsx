@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ChangeEvent, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import {
   Bell,
   Camera,
@@ -42,6 +42,7 @@ import {
 import { analyzeImage, pointsForEstimatedWaste, uploadImage } from "./lib/api";
 import { clearDraft, loadDraft, saveDraft } from "./lib/drafts";
 import type { AiReview, Ranking, ReportDraft, TrashReport, TrashType, UserProfile } from "./types";
+import CampusMap from "./components/CampusMap";
 
 type View = "home" | "report" | "ranking" | "profile";
 type InstallEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> };
@@ -354,7 +355,7 @@ function HomePage({ profile, reports, onReport, onRanking }: { profile: UserProf
           <button className={mapMode === "gps" ? "active" : ""} onClick={() => setMapMode("gps")}>GPS</button>
           <button className={mapMode === "3d" ? "active" : ""} onClick={() => setMapMode("3d")}>3D</button>
         </div>
-        <div className="map-school-label">
+        <div className={`map-school-label ${mapMode === "gps" ? "on-google-map" : ""}`}>
           <strong>Trường PTDTNT THPT Đam San</strong>
           <span>Điểm xuất phát · Hãy nhặt rác!</span>
         </div>
@@ -362,8 +363,8 @@ function HomePage({ profile, reports, onReport, onRanking }: { profile: UserProf
           <button onClick={() => setZoom((value) => Math.min(1.28, value + .08))} aria-label="Phóng to"><img src={`${ASSET}ic_zoom_in_3d.png`} alt="" /></button>
           <button onClick={() => setZoom((value) => Math.max(.78, value - .08))} aria-label="Thu nhỏ"><img src={`${ASSET}ic_zoom_out_3d.png`} alt="" /></button>
         </div>
-        <div className={`campus-viewport ${mapMode === "gps" ? "gps" : "three-d"}`} style={{ "--campus-zoom": zoom } as CSSProperties}>
-          <CampusIllustration />
+        <div className="campus-viewport">
+          <CampusMap mode={mapMode} reports={reports} zoom={zoom} />
         </div>
       </section>
 
