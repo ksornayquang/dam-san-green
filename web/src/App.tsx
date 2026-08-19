@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ChangeEvent, type ReactNode 
 import {
   Bell,
   Camera,
+  BookOpen,
   Check,
   ChevronRight,
   CircleUserRound,
@@ -16,15 +17,18 @@ import {
   MapPin,
   Medal,
   Menu,
+  MessageCircle,
   Pause,
   Recycle,
   RotateCcw,
   Send,
   Settings,
   ShieldCheck,
+  School,
   Sparkles,
   Trophy,
   UploadCloud,
+  Users,
   Volume2,
   VolumeX,
   WifiOff,
@@ -44,7 +48,7 @@ import { clearDraft, loadDraft, saveDraft } from "./lib/drafts";
 import type { AiReview, Ranking, ReportDraft, TrashReport, TrashType, UserProfile } from "./types";
 import CampusMap from "./components/CampusMap";
 
-type View = "home" | "report" | "ranking" | "profile";
+type View = "home" | "report" | "ranking" | "profile" | "school";
 type InstallEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> };
 
 const SCHOOL = { lat: 12.900868056693273, lon: 108.2911159047231 };
@@ -56,6 +60,15 @@ const demoProfile: UserProfile = {
   className: "11A1",
   displayName: "Lớp 11A1",
   email: "demo@damsan.edu.vn",
+  role: "student",
+  demo: true
+};
+
+const guestProfile: UserProfile = {
+  uid: "guest-visitor",
+  className: "KHÁCH",
+  displayName: "Khách tham quan",
+  email: "",
   role: "student",
   demo: true
 };
@@ -121,6 +134,8 @@ function App() {
       } catch {
         setProfile({ uid: user.uid, className: "Unknown", displayName: "Người dùng", email: user.email ?? "", role: "student" });
       }
+    } else if (sessionStorage.getItem("dsg-guest") === "true") {
+      setProfile(guestProfile);
     } else if (sessionStorage.getItem("dsg-demo") === "true") {
       setProfile(demoProfile);
     } else {
@@ -144,6 +159,10 @@ function App() {
     const timer = window.setTimeout(() => setToast(""), 4200);
     return () => window.clearTimeout(timer);
   }, [toast]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [view]);
 
   const playSound = (kind: "tap" | "success" | "error" = "tap") => {
     if (!soundEnabled) return;
@@ -170,6 +189,7 @@ function App() {
 
   const handleLogout = async () => {
     sessionStorage.removeItem("dsg-demo");
+    sessionStorage.removeItem("dsg-guest");
     if (!profile?.demo) await logout();
     setProfile(null);
     setView("home");
@@ -186,10 +206,17 @@ function App() {
 
   if (!authReady) return <Splash />;
   if (!profile) {
-    return <LoginScreen onDemo={() => {
-      sessionStorage.setItem("dsg-demo", "true");
-      setProfile(demoProfile);
-    }} />;
+    return <LoginScreen
+      onDemo={() => {
+        sessionStorage.setItem("dsg-demo", "true");
+        setProfile(demoProfile);
+      }}
+      onGuest={() => {
+        sessionStorage.setItem("dsg-guest", "true");
+        setProfile(guestProfile);
+        setView("home");
+      }}
+    />;
   }
 
   const addDemoReport = (report: TrashReport) => {
@@ -208,7 +235,7 @@ function App() {
         onNotify={() => notify("Bạn không có thông báo mới.")}
       />
       <main className="page-stage">
-        {view === "home" && <HomePage profile={profile} reports={reports} onReport={() => setView("report")} onRanking={() => setView("ranking")} />}
+        {view === "home" && <HomePage profile={profile} reports={reports} onReport={() => profile.uid === guestProfile.uid ? notify("Hãy đăng nhập tài khoản lớp để chụp ảnh báo cáo.") : setView("report")} onRanking={() => setView("ranking")} onSchool={() => setView("school")} />}
         {view === "report" && (
           <ReportPage
             profile={profile}
@@ -221,6 +248,7 @@ function App() {
           />
         )}
         {view === "ranking" && <RankingPage reports={reports} />}
+        {view === "school" && <SchoolInfoPage onBack={() => setView("home")} />}
         {view === "profile" && (
           <ProfilePage
             profile={profile}
@@ -253,6 +281,7 @@ function App() {
             setShowMenu(false);
             void handleLogout();
           }}
+          guest={profile.uid === guestProfile.uid}
         />
       )}
       {toast && <div className="toast" role="status">{toast}</div>}
@@ -270,7 +299,7 @@ function Splash() {
   );
 }
 
-function LoginScreen({ onDemo }: { onDemo: () => void }) {
+function LoginScreen({ onDemo, onGuest }: { onDemo: () => void; onGuest: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -310,6 +339,7 @@ function LoginScreen({ onDemo }: { onDemo: () => void }) {
         <button className="primary-button" onClick={() => void submit()} disabled={busy}>{busy ? "Đang đăng nhập..." : "ĐĂNG NHẬP"}<ChevronRight size={18} /></button>
         <div className="or"><span />hoặc<span /></div>
         <button className="demo-button" onClick={onDemo}><Sparkles size={18} />Xem bản trình diễn dành cho BGK</button>
+        <button className="guest-button" onClick={onGuest}><School size={18} />Khách tham quan · Giới thiệu trường</button>
         <p className="security-note"><ShieldCheck size={16} />Bản trình diễn không làm thay đổi dữ liệu thi đua thật.</p>
       </section>
     </div>
@@ -340,7 +370,7 @@ function Header({ profile, reports, onMenu, onNotify }: { profile: UserProfile; 
   );
 }
 
-function HomePage({ profile, reports, onReport, onRanking }: { profile: UserProfile; reports: TrashReport[]; onReport: () => void; onRanking: () => void }) {
+function HomePage({ profile, reports, onReport, onRanking, onSchool }: { profile: UserProfile; reports: TrashReport[]; onReport: () => void; onRanking: () => void; onSchool: () => void }) {
   const [mapMode, setMapMode] = useState<"gps" | "3d">("3d");
   const [zoom, setZoom] = useState(1);
   const rankings = calculateRankings(reports);
@@ -375,6 +405,14 @@ function HomePage({ profile, reports, onReport, onRanking }: { profile: UserProf
         <ChevronRight size={21} />
       </section>
 
+      {profile.uid === guestProfile.uid && (
+        <section className="guest-school-card" onClick={onSchool} role="button" tabIndex={0}>
+          <span className="guest-school-icon"><School size={25} /></span>
+          <div><span>KHÁM PHÁ ĐAM SAN</span><strong>Giới thiệu trường và đời sống nội trú</strong><small>Bản tin · Phong trào Đoàn · Dam San Green</small></div>
+          <ChevronRight size={21} />
+        </section>
+      )}
+
       <section className="impact-section">
         <div className="section-title"><span className="icon-well"><img src={`${ASSET}ic_leaf_3d.png`} alt="" /></span><div><h2>Tác động xanh</h2><p>Số liệu tự động từ các báo cáo đã duyệt</p></div></div>
         <div className="impact-grid">
@@ -387,7 +425,7 @@ function HomePage({ profile, reports, onReport, onRanking }: { profile: UserProf
 
       <section className="mission-strip">
         <div className="mission-copy"><span><ListChecks size={18} />NHIỆM VỤ HÔM NAY</span><h2>Nhặt rác sân trường</h2><p>Thu gom rác vương vãi quanh sân và xác thực bằng hai ảnh.</p><div className="progress"><i style={{ width: `${Math.min(100, (approved.length % 3) * 33)}%` }} /></div></div>
-        <button className="scan-button" onClick={onReport}><span>QUÉT RÁC</span><small>3–15 điểm</small><img src={`${ASSET}ic_camera_3d.png`} alt="" /></button>
+        <button className={`scan-button ${profile.uid === guestProfile.uid ? "locked" : ""}`} onClick={onReport}><span>{profile.uid === guestProfile.uid ? "CẦN ĐĂNG NHẬP" : "QUÉT RÁC"}</span><small>{profile.uid === guestProfile.uid ? "Khóa báo cáo" : "3–15 điểm"}</small><img src={`${ASSET}ic_camera_3d.png`} alt="" /></button>
       </section>
     </div>
   );
@@ -598,6 +636,88 @@ function PhotoCard({ title, subtitle, file, onClick, done, disabled }: { title: 
   );
 }
 
+function SchoolInfoPage({ onBack }: { onBack: () => void }) {
+  const [showAssistant, setShowAssistant] = useState(false);
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("Xin chào! Mình là trợ lý Đam San. Bạn có thể hỏi về trường, đời sống nội trú hoặc phong trào Dam San Green.");
+  const bulletins = [
+    { title: "Dam San Green", body: "Thi đua xây dựng trường học Xanh - Sạch - Đẹp, ghi nhận minh chứng bằng ứng dụng.", icon: <Leaf size={22} /> },
+    { title: "Lao động khu nội trú", body: "Các lớp vệ sinh phòng ở, sân trường và khu vực sinh hoạt chung theo lịch.", icon: <Users size={22} /> },
+    { title: "Hoạt động Đoàn", body: "Ngày thứ bảy xanh, phân loại rác và chăm sóc cảnh quan trong khuôn viên.", icon: <Sparkles size={22} /> }
+  ];
+
+  const ask = (value = question) => {
+    const normalized = value.trim().toLocaleLowerCase("vi-VN");
+    if (!normalized) return;
+    setQuestion(value);
+    if (/(nội trú|sinh hoạt|ký túc)/.test(normalized)) {
+      setAnswer("Đam San là môi trường học tập gắn với sinh hoạt nội trú. Học sinh rèn luyện nề nếp, vệ sinh khu ở và tham gia các hoạt động tập thể tại trường.");
+    } else if (/(rác|môi trường|xanh|dam san green|nhặt)/.test(normalized)) {
+      setAnswer("Dam San Green giúp học sinh báo cáo điểm rác bằng hai ảnh, xác thực vị trí và nhận điểm thi đua sau khi duyệt. Mục tiêu là biến việc giữ trường sạch thành phong trào có dữ liệu minh bạch.");
+    } else if (/(ở đâu|địa chỉ|bản đồ|đường)/.test(normalized)) {
+      setAnswer("Trường PTDTNT THPT Đam San được hiển thị tại khu vực Ea Hiao, Đắk Lắk. Bạn có thể mở chế độ GPS ở Trang chủ để xem vị trí và chỉ đường.");
+    } else {
+      setAnswer("Trường PTDTNT THPT Đam San là môi trường học tập và sinh hoạt nội trú, chú trọng nề nếp, hoạt động Đoàn và xây dựng cảnh quan xanh sạch. Với thông tin hành chính chi tiết, bạn nên liên hệ trực tiếp nhà trường.");
+    }
+  };
+
+  return (
+    <div className="school-page">
+      <div className="school-page-bar">
+        <button onClick={onBack} aria-label="Quay lại"><ChevronRight size={21} /></button>
+        <div><span>KHÁCH THAM QUAN</span><strong>Giới thiệu Đam San</strong></div>
+        <button onClick={() => setShowAssistant(true)} aria-label="Mở trợ lý Đam San"><MessageCircle size={21} /></button>
+      </div>
+
+      <section className="school-hero">
+        <CampusMap mode="3d" reports={[]} zoom={.88} />
+        <div className="school-hero-copy">
+          <span>TRƯỜNG HỌC · NỘI TRÚ · TRƯỞNG THÀNH</span>
+          <h1>Trường PTDTNT THPT Đam San</h1>
+          <p>Nơi học sinh các dân tộc học tập, rèn luyện và cùng xây dựng một khuôn viên xanh, sạch, đẹp.</p>
+        </div>
+      </section>
+
+      <section className="school-intro-grid">
+        <article><span><BookOpen size={23} /></span><div><strong>Môi trường học tập</strong><p>Học văn hóa gắn với rèn luyện kỹ năng, nề nếp và tinh thần tự chủ.</p></div></article>
+        <article><span><Users size={23} /></span><div><strong>Đời sống nội trú</strong><p>Cùng học, cùng sinh hoạt và chia sẻ trách nhiệm với không gian chung.</p></div></article>
+        <article><span><Leaf size={23} /></span><div><strong>Trường học xanh</strong><p>Mỗi lớp phụ trách cảnh quan, phân loại rác và tham gia thi đua môi trường.</p></div></article>
+      </section>
+
+      <section className="school-story">
+        <div className="school-section-heading"><span>VỀ ĐAM SAN</span><h2>Một mái trường, nhiều bản sắc</h2></div>
+        <p>Đam San là môi trường học tập và sinh hoạt nội trú dành cho học sinh. Bên cạnh kiến thức, nhà trường chú trọng tinh thần đoàn kết, kỷ luật, kỹ năng sống và trách nhiệm với cộng đồng.</p>
+        <p>Dam San Green số hóa phong trào vệ sinh trường học: ghi nhận việc nhặt rác bằng minh chứng trước - sau, hỗ trợ phân loại và cập nhật điểm thi đua lớp theo thời gian thực.</p>
+      </section>
+
+      <section className="school-news">
+        <div className="school-section-heading"><span>BẢN TIN</span><h2>Hoạt động nổi bật</h2></div>
+        <div className="school-news-list">{bulletins.map((item) => <article key={item.title}><span>{item.icon}</span><div><strong>{item.title}</strong><p>{item.body}</p></div></article>)}</div>
+      </section>
+
+      <section className="school-ai-invite" onClick={() => setShowAssistant(true)} role="button" tabIndex={0}>
+        <span><Sparkles size={24} /></span><div><strong>Trợ lý Đam San</strong><p>Hỏi nhanh về trường, nội trú và phong trào môi trường.</p></div><ChevronRight size={20} />
+      </section>
+
+      {showAssistant && (
+        <Modal onClose={() => setShowAssistant(false)}>
+          <div className="school-assistant">
+            <span className="assistant-mark"><Sparkles size={24} /></span>
+            <h2>Trợ lý Đam San</h2>
+            <p className="assistant-answer">{answer}</p>
+            <div className="assistant-quick">
+              <button onClick={() => ask("Giới thiệu ngắn gọn về trường")}>Giới thiệu trường</button>
+              <button onClick={() => ask("Đời sống nội trú như thế nào?")}>Đời sống nội trú</button>
+              <button onClick={() => ask("Dam San Green hoạt động ra sao?")}>Phong trào xanh</button>
+            </div>
+            <div className="assistant-input"><input value={question} onChange={(event) => setQuestion(event.target.value)} onKeyDown={(event) => event.key === "Enter" && ask()} placeholder="Nhập câu hỏi về Đam San..." /><button onClick={() => ask()} aria-label="Gửi câu hỏi"><Send size={18} /></button></div>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
 function RankingPage({ reports }: { reports: TrashReport[] }) {
   const ranking = calculateRankings(reports);
   const podium = [ranking[1], ranking[0], ranking[2]];
@@ -669,7 +789,7 @@ function BottomNav({ active, onChange }: { active: View; onChange: (view: View) 
   return <nav className="bottom-nav">{items.map((item) => <button key={item.id} className={`${active === item.id ? "active" : ""} ${item.id === "report" ? "nav-scan" : ""}`} onClick={() => onChange(item.id)}>{item.id === "report" ? <span><img src={`${ASSET}ic_camera_3d.png`} alt="" /></span> : item.icon}<small>{item.label}</small></button>)}</nav>;
 }
 
-function AppMenu({ active, onClose, onChange, onInstall, onLogout }: { active: View; onClose: () => void; onChange: (view: View) => void; onInstall: () => void; onLogout: () => void }) {
+function AppMenu({ active, onClose, onChange, onInstall, onLogout, guest }: { active: View; onClose: () => void; onChange: (view: View) => void; onInstall: () => void; onLogout: () => void; guest: boolean }) {
   return (
     <div className="menu-backdrop" onClick={onClose}>
       <aside className="app-menu" onClick={(event) => event.stopPropagation()} aria-label="Menu ứng dụng">
@@ -683,11 +803,12 @@ function AppMenu({ active, onClose, onChange, onInstall, onLogout }: { active: V
           <button className={active === "home" ? "active" : ""} onClick={() => onChange("home")}><Home size={20} /><span>Trang chủ<small>Bản đồ và nhiệm vụ hôm nay</small></span><ChevronRight size={18} /></button>
           <button className={active === "report" ? "active" : ""} onClick={() => onChange("report")}><Camera size={20} /><span>Báo cáo rác<small>Chụp ảnh trước và sau</small></span><ChevronRight size={18} /></button>
           <button className={active === "ranking" ? "active" : ""} onClick={() => onChange("ranking")}><Trophy size={20} /><span>Bảng xếp hạng<small>Điểm thi đua toàn trường</small></span><ChevronRight size={18} /></button>
-          <button className={active === "profile" ? "active" : ""} onClick={() => onChange("profile")}><CircleUserRound size={20} /><span>Trang cá nhân<small>Hồ sơ, lịch sử và cài đặt</small></span><ChevronRight size={18} /></button>
+          <button className={active === "school" ? "active" : ""} onClick={() => onChange("school")}><School size={20} /><span>Giới thiệu trường<small>Nội trú, bản tin và hoạt động xanh</small></span><ChevronRight size={18} /></button>
+          {!guest && <button className={active === "profile" ? "active" : ""} onClick={() => onChange("profile")}><CircleUserRound size={20} /><span>Trang cá nhân<small>Hồ sơ, lịch sử và cài đặt</small></span><ChevronRight size={18} /></button>}
         </nav>
         <div className="app-menu-actions">
           <button onClick={onInstall}><Download size={18} />Cài lên màn hình chính</button>
-          <button className="menu-logout" onClick={onLogout}><LogOut size={18} />Đăng xuất</button>
+          <button className="menu-logout" onClick={onLogout}><LogOut size={18} />{guest ? "Đăng nhập tài khoản lớp" : "Đăng xuất"}</button>
         </div>
       </aside>
     </div>
