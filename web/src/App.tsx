@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ChangeEvent, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent, type CSSProperties, type ReactNode } from "react";
 import {
   Bell,
   Camera,
@@ -102,6 +102,7 @@ function App() {
   const [toast, setToast] = useState("");
   const [soundEnabled, setSoundEnabled] = useState(() => localStorage.getItem("dsg-sound") !== "off");
   const [installEvent, setInstallEvent] = useState<InstallEvent | null>(null);
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     const onInstall = (event: Event) => {
@@ -199,7 +200,12 @@ function App() {
 
   return (
     <div className="app-shell">
-      <Header profile={profile} onInstall={handleInstall} onNotify={() => notify("Bạn không có thông báo mới.")} />
+      <Header
+        profile={profile}
+        reports={reports}
+        onMenu={() => setShowMenu(true)}
+        onNotify={() => notify("Bạn không có thông báo mới.")}
+      />
       <main className="page-stage">
         {view === "home" && <HomePage profile={profile} reports={reports} onReport={() => setView("report")} onRanking={() => setView("ranking")} />}
         {view === "report" && (
@@ -229,7 +235,25 @@ function App() {
           />
         )}
       </main>
-      <BottomNav active={view} onChange={(next) => { playSound(); setView(next); }} />
+      {showMenu && (
+        <AppMenu
+          active={view}
+          onClose={() => setShowMenu(false)}
+          onChange={(next) => {
+            playSound();
+            setView(next);
+            setShowMenu(false);
+          }}
+          onInstall={() => {
+            setShowMenu(false);
+            void handleInstall();
+          }}
+          onLogout={() => {
+            setShowMenu(false);
+            void handleLogout();
+          }}
+        />
+      )}
       {toast && <div className="toast" role="status">{toast}</div>}
     </div>
   );
@@ -291,53 +315,67 @@ function LoginScreen({ onDemo }: { onDemo: () => void }) {
   );
 }
 
-function Header({ profile, onInstall, onNotify }: { profile: UserProfile; onInstall: () => void; onNotify: () => void }) {
+function Header({ profile, reports, onMenu, onNotify }: { profile: UserProfile; reports: TrashReport[]; onMenu: () => void; onNotify: () => void }) {
+  const points = calculateRankings(reports).find((item) => item.className === profile.className)?.totalPoints ?? 0;
   return (
     <header className="topbar">
-      <div className="brand-lockup">
-        <img src={`${ASSET}logo_damsan_green.png`} alt="" />
-        <div><strong>Đam San Green</strong><span>{profile.demo ? "Chế độ trình diễn" : `Xin chào, ${profile.className}`}</span></div>
+      <div className="topbar-main">
+        <div className="brand-lockup">
+          <img src={`${ASSET}logo_damsan_green.png`} alt="Logo Đam San Green" />
+          <div><strong>Trường PTDTNT THPT Đam San</strong><span>Dam San Green</span></div>
+        </div>
+        <div className="header-actions">
+          <button className="icon-button bell-button" onClick={onNotify} aria-label="Thông báo"><img src={`${ASSET}ic_bell_3d.png`} alt="" /></button>
+          <button className="icon-button menu-button" onClick={onMenu} aria-label="Mở menu"><Menu size={22} /></button>
+        </div>
       </div>
-      <div className="header-actions">
-        <button className="icon-button install-mini" onClick={onInstall} aria-label="Cài ứng dụng"><Download size={20} /></button>
-        <button className="icon-button bell-button" onClick={onNotify} aria-label="Thông báo"><img src={`${ASSET}ic_bell_3d.png`} alt="" /></button>
+      <div className="header-info-row">
+        <span className="temperature"><CloudSun size={21} /><strong>24°C</strong></span>
+        <span className="weather-chip">Mây đen u ám</span>
+        <span className="location-chip"><img src={`${ASSET}ic_pin_3d.png`} alt="" />Ea Hiao, Đắk Lắk</span>
+        <span className="header-points">{points} Điểm</span>
       </div>
     </header>
   );
 }
 
 function HomePage({ profile, reports, onReport, onRanking }: { profile: UserProfile; reports: TrashReport[]; onReport: () => void; onRanking: () => void }) {
+  const [mapMode, setMapMode] = useState<"gps" | "3d">("3d");
+  const [zoom, setZoom] = useState(1);
   const rankings = calculateRankings(reports);
   const approved = reports.filter((item) => item.status === "approved");
   const waste = approved.reduce((sum, item) => sum + (item.aiEstimatedKg || 0), 0);
   const classes = new Set(approved.map((item) => item.className)).size;
-  const currentClass = rankings.find((item) => item.className === profile.className);
 
   return (
     <div className="home-page">
       <section className="campus-panel">
-        <div className="weather-row">
-          <span><CloudSun size={20} />24°C</span>
-          <span><MapPin size={18} />Ea Hiao, Đắk Lắk</span>
-          <span className="points-pill">{currentClass?.totalPoints ?? 0} điểm</span>
+        <div className="map-mode" aria-label="Chế độ bản đồ">
+          <button className={mapMode === "gps" ? "active" : ""} onClick={() => setMapMode("gps")}>GPS</button>
+          <button className={mapMode === "3d" ? "active" : ""} onClick={() => setMapMode("3d")}>3D</button>
         </div>
-        <div className="map-copy">
-          <span className="live-pill"><LocateFixed size={15} />KHUÔN VIÊN TRƯỜNG</span>
-          <h1>Mỗi góc sân sạch hơn,<br />mỗi lớp tiến gần hơn.</h1>
-          <p>Báo cáo bằng hai ảnh, xác thực GPS và đồng bộ điểm thi đua theo thời gian thực.</p>
+        <div className="map-school-label">
+          <strong>Trường PTDTNT THPT Đam San</strong>
+          <span>Điểm xuất phát · Hãy nhặt rác!</span>
         </div>
-        <CampusIllustration />
+        <div className="map-zoom-controls">
+          <button onClick={() => setZoom((value) => Math.min(1.28, value + .08))} aria-label="Phóng to"><img src={`${ASSET}ic_zoom_in_3d.png`} alt="" /></button>
+          <button onClick={() => setZoom((value) => Math.max(.78, value - .08))} aria-label="Thu nhỏ"><img src={`${ASSET}ic_zoom_out_3d.png`} alt="" /></button>
+        </div>
+        <div className={`campus-viewport ${mapMode === "gps" ? "gps" : "three-d"}`} style={{ "--campus-zoom": zoom } as CSSProperties}>
+          <CampusIllustration />
+        </div>
       </section>
 
       <section className="ranking-preview" onClick={onRanking} role="button" tabIndex={0}>
         <img src={`${ASSET}ic_crown_gold_3d.png`} alt="" />
-        <div><span>BẢNG XẾP HẠNG LỚP</span><strong>{rankings[0] ? `${rankings[0].className} đang dẫn đầu` : "Chưa có lớp ghi điểm"}</strong></div>
+        <div><span>Bảng Xếp Hạng Lớp</span><strong><i>1</i>{rankings[0] ? rankings[0].className : "Đang tải..."}</strong></div>
         <div className="rank-score">{rankings[0]?.totalPoints ?? 0}<small>điểm</small></div>
         <ChevronRight size={21} />
       </section>
 
       <section className="impact-section">
-        <div className="section-title"><span className="icon-well"><Leaf size={20} /></span><div><h2>Tác động xanh</h2><p>Số liệu từ các báo cáo đã được duyệt</p></div></div>
+        <div className="section-title"><span className="icon-well"><img src={`${ASSET}ic_leaf_3d.png`} alt="" /></span><div><h2>Tác động xanh</h2><p>Số liệu tự động từ các báo cáo đã duyệt</p></div></div>
         <div className="impact-grid">
           <Stat value={approved.length.toString()} label="lượt dọn" tone="green" />
           <Stat value={`${formatNumber(waste)} kg`} label="rác thu gom" tone="red" />
@@ -628,6 +666,31 @@ function BottomNav({ active, onChange }: { active: View; onChange: (view: View) 
     { id: "profile", label: "Hồ sơ", icon: <CircleUserRound /> }
   ];
   return <nav className="bottom-nav">{items.map((item) => <button key={item.id} className={`${active === item.id ? "active" : ""} ${item.id === "report" ? "nav-scan" : ""}`} onClick={() => onChange(item.id)}>{item.id === "report" ? <span><img src={`${ASSET}ic_camera_3d.png`} alt="" /></span> : item.icon}<small>{item.label}</small></button>)}</nav>;
+}
+
+function AppMenu({ active, onClose, onChange, onInstall, onLogout }: { active: View; onClose: () => void; onChange: (view: View) => void; onInstall: () => void; onLogout: () => void }) {
+  return (
+    <div className="menu-backdrop" onClick={onClose}>
+      <aside className="app-menu" onClick={(event) => event.stopPropagation()} aria-label="Menu ứng dụng">
+        <div className="menu-handle" />
+        <div className="app-menu-heading">
+          <img src={`${ASSET}logo_damsan_green.png`} alt="" />
+          <div><strong>Dam San Green</strong><span>Hành động xanh · Thi đua minh bạch</span></div>
+          <button onClick={onClose} aria-label="Đóng menu"><X size={20} /></button>
+        </div>
+        <nav>
+          <button className={active === "home" ? "active" : ""} onClick={() => onChange("home")}><Home size={20} /><span>Trang chủ<small>Bản đồ và nhiệm vụ hôm nay</small></span><ChevronRight size={18} /></button>
+          <button className={active === "report" ? "active" : ""} onClick={() => onChange("report")}><Camera size={20} /><span>Báo cáo rác<small>Chụp ảnh trước và sau</small></span><ChevronRight size={18} /></button>
+          <button className={active === "ranking" ? "active" : ""} onClick={() => onChange("ranking")}><Trophy size={20} /><span>Bảng xếp hạng<small>Điểm thi đua toàn trường</small></span><ChevronRight size={18} /></button>
+          <button className={active === "profile" ? "active" : ""} onClick={() => onChange("profile")}><CircleUserRound size={20} /><span>Trang cá nhân<small>Hồ sơ, lịch sử và cài đặt</small></span><ChevronRight size={18} /></button>
+        </nav>
+        <div className="app-menu-actions">
+          <button onClick={onInstall}><Download size={18} />Cài lên màn hình chính</button>
+          <button className="menu-logout" onClick={onLogout}><LogOut size={18} />Đăng xuất</button>
+        </div>
+      </aside>
+    </div>
+  );
 }
 
 function Modal({ children, onClose }: { children: ReactNode; onClose: () => void }) {
