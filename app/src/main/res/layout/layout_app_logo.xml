@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- App Logo component: dùng include trong layout -->
+<!-- 3 variant: full (icon+text), icon-only, text-only -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/appLogoContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- School logo (official) -->
+        <ImageView
+            android:id="@+id/ivSchoolLogo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:visibility="gone"
+            android:contentDescription="Logo trường" />
+
+        <!-- Brand text section -->
+        <LinearLayout
+            android:id="@+id/logoTextSection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="10dp">
+
+            <!-- Brand name with leaf icon -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_leaf"
+                    app:tint="@color/ds_primary_light"
+                    android:layout_marginEnd="4dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dam San Green"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/ds_primary"
+                    android:fontFamily="@font/be_vietnam_pro_bold" />
+            </LinearLayout>
+
+            <!-- Subtitle -->
+            <TextView
+                android:id="@+id/tvLogoSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trường PTDTNT THPT Đam San"
+                android:textSize="11sp"
+                android:textColor="@color/ds_text_secondary"
+                android:fontFamily="@font/be_vietnam_pro"
+                android:layout_marginTop="1dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</merge>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/reportRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/eco_background"
+    android:clipToPadding="false">
+
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guideStart" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.05" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guideEnd" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.95" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guideHeader" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.10" />
+
+    <ImageButton android:id="@+id/btnBack" android:layout_width="44dp" android:layout_height="44dp" android:background="@drawable/bg_eco_icon_chip" android:contentDescription="Quay lại" android:src="@drawable/ic_eco_arrow_left" app:layout_constraintBottom_toTopOf="@id/guideHeader" app:layout_constraintStart_toStartOf="@id/guideStart" app:layout_constraintTop_toTopOf="parent" />
+    <TextView android:id="@+id/tvReportTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="10dp" android:ellipsize="end" android:fontFamily="@font/be_vietnam_pro_bold" android:maxLines="1" android:text="Xác thực thu gom" android:textColor="@color/eco_text" android:textSize="20sp" app:layout_constraintBottom_toBottomOf="@id/btnBack" app:layout_constraintEnd_toStartOf="@id/tvClassBadge" app:layout_constraintStart_toEndOf="@id/btnBack" app:layout_constraintTop_toTopOf="@id/btnBack" />
+    <TextView android:id="@+id/tvClassBadge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_eco_card" android:paddingHorizontal="10dp" android:paddingVertical="5dp" android:text="..." android:textColor="@color/eco_text" android:textStyle="bold" app:layout_constraintBottom_toBottomOf="@id/btnBack" app:layout_constraintEnd_toEndOf="@id/guideEnd" app:layout_constraintTop_toTopOf="@id/btnBack" />
+
+    <androidx.cardview.widget.CardView android:id="@+id/beforePhotoCard" android:layout_width="0dp" android:layout_height="0dp" android:layout_marginTop="8dp" app:cardCornerRadius="18dp" app:cardElevation="3dp" app:layout_constraintEnd_toEndOf="@id/guideEnd" app:layout_constraintHeight_percent="0.34" app:layout_constraintStart_toStartOf="@id/guideStart" app:layout_constraintTop_toTopOf="@id/guideHeader">
+        <ImageView android:id="@+id/ivPhotoPreview" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/bg_upload_placeholder" android:contentDescription="Chọn ảnh hiện trạng" android:padding="40dp" android:scaleType="centerInside" android:src="@drawable/img_placeholder_upload" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView android:id="@+id/afterPhotoCard" android:layout_width="0dp" android:layout_height="0dp" android:layout_margin="12dp" android:visibility="gone" app:cardCornerRadius="14dp" app:cardElevation="8dp" app:layout_constraintBottom_toBottomOf="@id/beforePhotoCard" app:layout_constraintEnd_toEndOf="@id/beforePhotoCard" app:layout_constraintHeight_percent="0.16" app:layout_constraintWidth_percent="0.38">
+        <ImageView android:id="@+id/ivAfterPhotoPreview" android:layout_width="match_parent" android:layout_height="match_parent" android:contentDescription="Ảnh xác thực đã bỏ rác" android:scaleType="centerCrop" />
+    </androidx.cardview.widget.CardView>
+
+    <EditText android:id="@+id/etReporterName" android:layout_width="0dp" android:layout_height="0dp" android:layout_marginTop="12dp" android:background="@drawable/bg_eco_input" android:hint="Tên người báo cáo" android:inputType="textPersonName|textCapWords" android:paddingHorizontal="18dp" android:textColor="@color/eco_text" android:textColorHint="#6F7F78" app:layout_constraintEnd_toEndOf="@id/guideEnd" app:layout_constraintHeight_percent="0.075" app:layout_constraintStart_toStartOf="@id/guideStart" app:layout_constraintTop_toBottomOf="@id/beforePhotoCard" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/locationCard" android:layout_width="0dp" android:layout_height="0dp" android:layout_marginTop="10dp" android:background="@drawable/bg_eco_card" android:paddingHorizontal="14dp" app:layout_constraintEnd_toEndOf="@id/guideEnd" app:layout_constraintHeight_percent="0.09" app:layout_constraintStart_toStartOf="@id/guideStart" app:layout_constraintTop_toBottomOf="@id/etReporterName">
+        <ImageView android:id="@+id/tvLocationIcon" android:layout_width="30dp" android:layout_height="30dp" android:contentDescription="Vị trí" android:scaleType="centerInside" android:src="@drawable/ic_pin_3d" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+        <TextView android:id="@+id/tvLocation" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:maxLines="2" android:text="Chụp ảnh để lấy tọa độ GPS..." android:textColor="@color/eco_text" android:textSize="12sp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/tvLocationIcon" app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/demoModeRow"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_eco_card_soft"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingHorizontal="14dp"
+        app:layout_constraintEnd_toEndOf="@id/guideEnd"
+        app:layout_constraintStart_toStartOf="@id/guideStart"
+        app:layout_constraintTop_toBottomOf="@id/locationCard">
+
+        <TextView
+            android:id="@+id/tvDemoModeLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Giới hạn vị trí trường: 500 m"
+            android:textColor="@color/eco_text_muted"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/switchDemoMode"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchDemoMode"
+            android:layout_width="52dp"
+            android:layout_height="wrap_content"
+            android:showText="false"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:thumbTint="@color/ds_primary"
+            app:trackTint="@color/ds_accent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar android:id="@+id/progressBar" android:layout_width="32dp" android:layout_height="32dp" android:indeterminateTint="@color/eco_primary" android:visibility="gone" app:layout_constraintBottom_toTopOf="@id/bottomActionBar" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" />
+    <TextView android:id="@+id/tvStatus" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:gravity="center" android:maxLines="2" android:textColor="@color/eco_primary" android:textSize="12sp" app:layout_constraintBottom_toTopOf="@id/bottomActionBar" app:layout_constraintEnd_toEndOf="@id/guideEnd" app:layout_constraintStart_toStartOf="@id/guideStart" />
+
+    <TextView android:id="@+id/tvStepGuide" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_scan_step" android:gravity="center" android:text="BƯỚC 1/2  •  CHỤP HIỆN TRẠNG" android:textColor="@color/eco_primary" android:textSize="13sp" android:textStyle="bold" app:layout_constraintBottom_toTopOf="@id/tvStatus" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/demoModeRow" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/bottomActionBar" android:layout_width="0dp" android:layout_height="0dp" android:layout_marginBottom="10dp" android:background="@drawable/bg_card_white" android:elevation="12dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="@id/guideEnd" app:layout_constraintHeight_percent="0.105" app:layout_constraintStart_toStartOf="@id/guideStart">
+        <ImageButton android:id="@+id/btnTakePhoto" android:layout_width="72dp" android:layout_height="72dp" android:background="@drawable/selector_scan_terracotta" android:contentDescription="Chụp ảnh xác thực" android:elevation="12dp" android:padding="8dp" android:scaleType="centerInside" android:src="@drawable/ic_camera_3d" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+        <FrameLayout android:id="@+id/btnSubmit" android:layout_width="0dp" android:layout_height="0dp" android:layout_marginStart="12dp" android:layout_marginEnd="8dp" android:background="@drawable/selector_scan_button" android:clickable="true" android:focusable="true" android:visibility="invisible" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHeight_percent="0.70" app:layout_constraintStart_toEndOf="@id/btnTakePhoto" app:layout_constraintTop_toTopOf="parent">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="GỬI BÁO CÁO" android:textColor="@color/white" android:textSize="14sp" android:textStyle="bold" />
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <nl.dionsegijn.konfetti.xml.KonfettiView android:id="@+id/konfettiView" android:layout_width="0dp" android:layout_height="0dp" android:clickable="false" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

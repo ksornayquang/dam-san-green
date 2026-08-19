@@ -1,0 +1,8 @@
+name = "dam-san-green-api"
+main = "src/index.ts"
+compatibility_date = "2026-08-01"
+
+[vars]
+FIREBASE_PROJECT_ID = "damsangreen-cba4f"
+GEMINI_MODEL = "gemini-2.5-flash"
+ALLOWED_ORIGIN = "http://localhost:5173"

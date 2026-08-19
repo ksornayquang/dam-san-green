@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Handle Base (Gold) -->
+    <path
+        android:fillColor="#E0B354"
+        android:pathData="M45,95 L55,95 L60,50 L40,50 Z"/>
+
+    <!-- Handle Brocade Patterns (Forest Green) -->
+    <path
+        android:fillColor="#14454F"
+        android:pathData="M42,55 L58,55 L56,65 L44,65 Z"/>
+    
+    <path
+        android:fillColor="#14454F"
+        android:pathData="M46,75 L54,75 L52,85 L48,85 Z"/>
+
+    <!-- Outer Flame (Earth Red) -->
+    <path
+        android:fillColor="#B5543D"
+        android:pathData="M50,5 C75,30 85,55 50,60 C15,55 25,30 50,5 Z"/>
+
+    <!-- Inner Flame (Gold) -->
+    <path
+        android:fillColor="#E0B354"
+        android:pathData="M50,20 C65,35 70,50 50,55 C30,50 35,35 50,20 Z"/>
+
+    <!-- Core Flame (White Ivory) -->
+    <path
+        android:fillColor="#FFFFF0"
+        android:pathData="M50,30 C58,40 60,48 50,50 C40,48 42,40 50,30 Z"/>
+</vector>

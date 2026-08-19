@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/profileScroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ds_background"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingBottom="32dp">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_btn_icon"
+            android:contentDescription="Quay lại"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvProfileTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:fontFamily="@font/be_vietnam_pro_bold"
+            android:text="Hồ sơ lớp"
+            android:textColor="@color/ds_primary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/btnBack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnBack"
+            app:layout_constraintTop_toTopOf="@id/btnBack" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/avatarCard"
+            android:layout_width="104dp"
+            android:layout_height="104dp"
+            android:layout_marginTop="20dp"
+            app:cardBackgroundColor="@color/ds_primary_light"
+            app:cardCornerRadius="52dp"
+            app:cardElevation="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnBack"
+            app:strokeColor="@color/ds_accent"
+            app:strokeWidth="3dp">
+            <ImageView android:id="@+id/ivProfileAvatar" android:layout_width="match_parent" android:layout_height="match_parent" android:contentDescription="Ảnh đại diện lớp" android:padding="12dp" android:scaleType="fitCenter" android:src="@drawable/ic_profile_3d" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/tvProfileClass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/be_vietnam_pro_bold"
+            android:text="Lớp 11A1"
+            android:textColor="@color/ds_text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/avatarCard" />
+
+        <TextView
+            android:id="@+id/tvProfileEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/be_vietnam_pro"
+            android:text="11a1@damsan.edu.vn"
+            android:textColor="@color/ds_text_secondary"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvProfileClass" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardStatPoints"
+            android:layout_width="0dp"
+            android:layout_height="112dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="6dp"
+            app:cardBackgroundColor="#FFFFFFFF"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="3dp"
+            app:layout_constraintEnd_toStartOf="@id/cardStatReports"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvProfileEmail"
+            app:strokeColor="@color/ds_border"
+            app:strokeWidth="1dp">
+            <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="match_parent" android:padding="8dp">
+                <ImageView android:id="@+id/ivStatPoints" android:layout_width="34dp" android:layout_height="34dp" android:contentDescription="Tổng điểm" android:scaleType="fitCenter" android:src="@drawable/ic_star_3d" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                <TextView android:id="@+id/statPoints" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="@font/be_vietnam_pro_bold" android:text="0" android:textColor="@color/ds_primary" android:textSize="24sp" android:textStyle="bold" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/ivStatPoints" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tổng điểm" android:textColor="@color/ds_text_secondary" android:textSize="11sp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/statPoints" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardStatReports"
+            android:layout_width="0dp"
+            android:layout_height="112dp"
+            android:layout_marginHorizontal="3dp"
+            app:cardBackgroundColor="#FFFFFFFF"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="3dp"
+            app:layout_constraintEnd_toStartOf="@id/cardStatRank"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/cardStatPoints"
+            app:layout_constraintTop_toTopOf="@id/cardStatPoints"
+            app:strokeColor="@color/ds_border"
+            app:strokeWidth="1dp">
+            <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="match_parent" android:padding="8dp">
+                <ImageView android:id="@+id/ivStatReports" android:layout_width="38dp" android:layout_height="38dp" android:contentDescription="Lần nhặt" android:scaleType="fitCenter" android:src="@drawable/ic_heart_3d" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                <TextView android:id="@+id/statReports" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="@font/be_vietnam_pro_bold" android:text="0" android:textColor="@color/ds_primary_light" android:textSize="24sp" android:textStyle="bold" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/ivStatReports" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lần nhặt" android:textColor="@color/ds_text_secondary" android:textSize="11sp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/statReports" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardStatRank"
+            android:layout_width="0dp"
+            android:layout_height="112dp"
+            android:layout_marginStart="6dp"
+            app:cardBackgroundColor="#FFFFFFFF"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/cardStatReports"
+            app:layout_constraintTop_toTopOf="@id/cardStatPoints"
+            app:strokeColor="@color/ds_border"
+            app:strokeWidth="1dp">
+            <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="match_parent" android:padding="8dp">
+                <ImageView android:id="@+id/ivStatRank" android:layout_width="42dp" android:layout_height="42dp" android:contentDescription="Xếp hạng" android:scaleType="centerInside" android:src="@drawable/ic_crown_gold_3d" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                <TextView android:id="@+id/statRank" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="@font/be_vietnam_pro_bold" android:text="#-" android:textColor="@color/gong_gold" android:textSize="24sp" android:textStyle="bold" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/ivStatRank" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Xếp hạng" android:textColor="@color/ds_text_secondary" android:textSize="11sp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/statRank" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView android:id="@+id/tvAccountSection" style="@style/DS.SectionHeader" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="TÀI KHOẢN" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/cardStatPoints" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/menuClassInfo" android:layout_width="0dp" android:layout_height="60dp" android:layout_marginTop="8dp" android:background="@drawable/bg_glass_menu_item" android:clickable="true" android:focusable="true" android:paddingHorizontal="16dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/tvAccountSection">
+            <ImageView android:id="@+id/iconClassInfo" android:layout_width="32dp" android:layout_height="32dp" android:scaleType="fitCenter" android:src="@drawable/ic_profile_3d" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:text="Thông tin lớp học" style="@style/DS.MenuItem.Title" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/iconClassInfo" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/menuHistory" android:layout_width="0dp" android:layout_height="60dp" android:layout_marginTop="6dp" android:background="@drawable/bg_glass_menu_item" android:clickable="true" android:focusable="true" android:paddingHorizontal="16dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/menuClassInfo">
+            <ImageView android:id="@+id/iconHistory" android:layout_width="28dp" android:layout_height="28dp" android:scaleType="fitCenter" android:src="@drawable/ic_history_3d" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="Lịch sử báo cáo" style="@style/DS.MenuItem.Title" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/iconHistory" app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/menuChangePass" android:layout_width="0dp" android:layout_height="60dp" android:layout_marginTop="6dp" android:background="@drawable/bg_glass_menu_item" android:clickable="true" android:focusable="true" android:paddingHorizontal="16dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/menuHistory">
+            <ImageView android:id="@+id/iconPassword" android:layout_width="28dp" android:layout_height="28dp" android:scaleType="fitCenter" android:src="@drawable/ic_password_3d" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="Đổi mật khẩu" style="@style/DS.MenuItem.Title" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/iconPassword" app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView android:id="@+id/tvAppSection" style="@style/DS.SectionHeader" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:text="ỨNG DỤNG" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/menuChangePass" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/menuAbout" android:layout_width="0dp" android:layout_height="68dp" android:layout_marginTop="8dp" android:background="@drawable/bg_glass_menu_item" android:clickable="true" android:focusable="true" android:paddingHorizontal="16dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/tvAppSection">
+            <ImageView android:id="@+id/iconAbout" android:layout_width="30dp" android:layout_height="30dp" android:scaleType="fitCenter" android:src="@drawable/ic_info_3d" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+            <TextView android:id="@+id/tvAboutTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:text="Về Dam San Green" style="@style/DS.MenuItem.Title" app:layout_constraintBottom_toTopOf="@id/tvAboutSubtitle" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/iconAbout" app:layout_constraintTop_toTopOf="parent" />
+            <TextView android:id="@+id/tvAboutSubtitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:text="Phiên bản 1.0.0" style="@style/DS.MenuItem.Subtitle" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/iconAbout" app:layout_constraintTop_toBottomOf="@id/tvAboutTitle" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/menuFeedback" android:layout_width="0dp" android:layout_height="60dp" android:layout_marginTop="6dp" android:background="@drawable/bg_glass_menu_item" android:clickable="true" android:focusable="true" android:paddingHorizontal="16dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/menuAbout">
+            <ImageView android:id="@+id/iconFeedback" android:layout_width="28dp" android:layout_height="28dp" android:scaleType="fitCenter" android:src="@drawable/ic_feedback_3d" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="Góp ý / Báo lỗi" style="@style/DS.MenuItem.Title" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/iconFeedback" app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogout"
+            android:layout_width="0dp"
+            android:layout_height="54dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#FFF4F3"
+            android:fontFamily="@font/be_vietnam_pro_semibold"
+            android:text="ĐĂNG XUẤT"
+            android:textColor="@color/ds_error"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_logout_3d"
+            app:iconGravity="textStart"
+            app:iconPadding="10dp"
+            app:iconSize="26dp"
+            app:iconTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/menuFeedback" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

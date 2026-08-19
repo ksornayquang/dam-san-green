@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CTA "Quét Rác Ngay" — warm gradient with rounded corners -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="#D35230"
+        android:endColor="#E8734F"
+        android:angle="135"/>
+    <corners android:radius="20dp"/>
+</shape>

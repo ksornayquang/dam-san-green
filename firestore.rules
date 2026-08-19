@@ -1,0 +1,17 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /settings/{document=**} {
+      allow read: if request.auth != null;
+
+      // Firestore cannot read admin roles from Realtime Database.
+      // Keep writes disabled here unless you also create custom claims or /admins/{uid}.
+      allow write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

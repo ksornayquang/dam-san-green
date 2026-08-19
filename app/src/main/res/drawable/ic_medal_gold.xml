@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Ribbon left -->
+    <path
+        android:fillColor="#43A047"
+        android:pathData="M8,2 L6,8 L10,8 Z"/>
+    <!-- Ribbon right -->
+    <path
+        android:fillColor="#43A047"
+        android:pathData="M16,2 L18,8 L14,8 Z"/>
+    <!-- Medal circle outer -->
+    <path
+        android:fillColor="#E5C158"
+        android:pathData="M12,8 m-7,0 a7,7 0,1 1,14 0 a7,7 0,1 1,-14 0"/>
+    <!-- Medal circle inner -->
+    <path
+        android:fillColor="#D4A932"
+        android:pathData="M12,8 m-5,0 a5,5 0,1 1,10 0 a5,5 0,1 1,-10 0"/>
+    <!-- Star -->
+    <path
+        android:fillColor="#FFEB3B"
+        android:pathData="M12,4.5 L13.09,7.36 L16.18,7.36 L13.64,9.24 L14.73,12.09 L12,10.2 L9.27,12.09 L10.36,9.24 L7.82,7.36 L10.91,7.36 Z"/>
+    <!-- Medal bottom ring -->
+    <path
+        android:fillColor="#E5C158"
+        android:pathData="M12,15 m-4.5,0 a4.5,4.5 0,1 1,9 0 a4.5,4.5 0,1 1,-9 0"/>
+    <path
+        android:fillColor="#D4A932"
+        android:pathData="M12,15 m-3,0 a3,3 0,1 1,6 0 a3,3 0,1 1,-6 0"/>
+    <!-- Number 1 text approximation -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M11,13.5 L13,13.5 L13,17 L11,17 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M10.5,16.5 L13.5,16.5 L13.5,17.5 L10.5,17.5 Z"/>
+</vector>

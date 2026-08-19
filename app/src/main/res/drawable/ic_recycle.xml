@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="#2D6A4F">
+    <!-- Recycle icon for mission and sorting UI -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M21.82,15.42L19.32,19.75C18.83,20.61 17.92,21.06 17,21H15V23L12.5,20L15,17V19H17.03L19.5,14.67L21.82,15.42M9.21,3.06H14.21C15.19,3.06 16.04,3.56 16.5,4.31L19,8.63L21.27,7.89L19.77,10.75L14.19,10.75L16.45,10.01L14,5.69H9.25L9.21,3.06M7.5,14.68L4.97,19.03L7,19.03V21.03H4.5C3.5,21 2.7,20.5 2.2,19.75L0,16.04L2.5,14.5L5,18.8L7.5,14.68M8.25,16.5L5.75,12.17L8.25,7.83H5.73L4.47,10.17L2.16,9.42L4.66,5.08C5.11,4.38 5.97,3.88 6.92,3.88H8.25V2L10.75,5L8.25,8V5.88H7.73L5.23,10.21L7.78,14.53L8.25,16.5Z" />
+</vector>

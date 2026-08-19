@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_profile"
+        android:title="Hồ sơ Lớp &amp; Thành tích" />
+    <item
+        android:id="@+id/menu_leaderboard"
+        android:title="Bảng xếp hạng" />
+    <item
+        android:id="@+id/menu_school_info"
+        android:title="Giới thiệu trường Đam San" />
+    <item
+        android:id="@+id/menu_logout"
+        android:title="Đăng xuất" />
+</menu>

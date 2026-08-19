@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Gold progress bar for Top 1 leaderboard -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:topLeftRadius="8dp" android:bottomLeftRadius="8dp" android:topRightRadius="0dp" android:bottomRightRadius="0dp"/>
+            <solid android:color="#F0EAD6"/>
+        </shape>
+    </item>
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:topLeftRadius="8dp" android:bottomLeftRadius="8dp" android:topRightRadius="0dp" android:bottomRightRadius="0dp"/>
+                <gradient
+                    android:startColor="#E5C158"
+                    android:endColor="#D4A932"
+                    android:angle="0"/>
+            </shape>
+        </clip>
+    </item>
+</layer-list>

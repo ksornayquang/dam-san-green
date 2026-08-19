@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Gradient fade from transparent to white (bottom cards) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="#00FAF7F1"
+        android:centerColor="#99FAF7F1"
+        android:endColor="#F0FAF7F1"
+        android:angle="270"/>
+    <padding android:top="24dp"/>
+</shape>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ds_background">
+
+    <ImageView
+        android:id="@+id/ivSplashBanner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="Banner trường"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_splash_photo_overlay" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_bottom_gradient"
+        android:alpha="0.65" />
+
+    <LinearLayout
+        android:id="@+id/splashContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="46dp"
+        android:paddingBottom="34dp">
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/splashCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_splash_brand_panel"
+            android:elevation="12dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingHorizontal="22dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="22dp">
+
+            <FrameLayout
+                android:id="@+id/logoFrame"
+                android:layout_width="116dp"
+                android:layout_height="116dp"
+                android:background="@drawable/bg_splash_logo_ring"
+                android:elevation="8dp"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/ivSplashLogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="Logo trường"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/logo_damsan_green" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/brandNameRow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="Xanh"
+                    android:src="@drawable/ic_leaf"
+                    app:tint="@color/ds_primary" />
+
+                <TextView
+                    android:id="@+id/tvSplashBrandMain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/be_vietnam_pro_bold"
+                    android:letterSpacing="0"
+                    android:text="DAM SAN"
+                    android:textColor="@color/ds_primary_dark"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvSplashGreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/be_vietnam_pro_bold"
+                android:letterSpacing="0"
+                android:text="GREEN"
+                android:textColor="@color/ds_primary_light"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSplashSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/be_vietnam_pro_regular"
+                android:gravity="center"
+                android:letterSpacing="0"
+                android:maxLines="2"
+                android:text="Trường PTDTNT THPT Đam San"
+                android:textColor="@color/ds_text_secondary"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:id="@+id/splashFeatureRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_marginEnd="7dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_splash_feature_chip"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/be_vietnam_pro_medium"
+                    android:gravity="center"
+                    android:letterSpacing="0"
+                    android:maxLines="1"
+                    android:text="AI hỏi đáp"
+                    android:textColor="@color/ds_primary_dark"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_marginEnd="7dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_splash_feature_chip"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/be_vietnam_pro_medium"
+                    android:gravity="center"
+                    android:letterSpacing="0"
+                    android:maxLines="1"
+                    android:text="Bản đồ xanh"
+                    android:textColor="@color/ds_primary_dark"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_splash_feature_chip"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/be_vietnam_pro_medium"
+                    android:gravity="center"
+                    android:letterSpacing="0"
+                    android:maxLines="1"
+                    android:text="Thi đua lớp"
+                    android:textColor="@color/ds_primary_dark"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/splashStatusRow"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_splash_feature_chip"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="14dp">
+
+            <ProgressBar
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:indeterminateTint="@color/ds_primary_light" />
+
+            <TextView
+                android:id="@+id/tvSplashStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="9dp"
+                android:fontFamily="@font/be_vietnam_pro_medium"
+                android:letterSpacing="0"
+                android:text="Đang đồng bộ dữ liệu xanh..."
+                android:textColor="@color/ds_primary_dark"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvSplashFooter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/be_vietnam_pro_regular"
+            android:gravity="center"
+            android:letterSpacing="0"
+            android:text="Mỗi báo cáo nhỏ góp thêm một góc trường sạch hơn"
+            android:textColor="@color/ds_text_secondary"
+            android:textSize="11sp" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_cotton_white"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:background="#D1D5DB"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dam San Green"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary_forest_green"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Profile -->
+    <LinearLayout
+        android:id="@+id/menuProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground">
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_profile_3d"
+            android:scaleType="fitCenter"
+            android:contentDescription="Hồ sơ"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hồ sơ Lớp &amp; Thành tích"
+            android:textSize="16sp"
+            android:textColor="@color/text_ash_gray"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <!-- Leaderboard -->
+    <LinearLayout
+        android:id="@+id/menuLeaderboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground">
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_crown_gold_3d"
+            android:scaleType="fitCenter"
+            android:contentDescription="Bảng xếp hạng"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bảng xếp hạng"
+            android:textSize="16sp"
+            android:textColor="@color/text_ash_gray"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <!-- School Info -->
+    <LinearLayout
+        android:id="@+id/menuSchoolInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground">
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_info_3d"
+            android:scaleType="fitCenter"
+            android:contentDescription="Giới thiệu trường"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Giới thiệu trường Đam San"
+            android:textSize="16sp"
+            android:textColor="@color/text_ash_gray"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+    <!-- Logout -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/menuLogout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:backgroundTint="#FFF4F3"
+        android:text="Đăng xuất"
+        android:textColor="@color/accent_earth_red"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_logout_3d"
+        app:iconGravity="textStart"
+        app:iconPadding="12dp"
+        app:iconSize="28dp"
+        app:iconTint="@null" />
+
+</LinearLayout>

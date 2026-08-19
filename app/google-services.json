@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1024014572187",
+    "firebase_url": "https://damsangreen-cba4f-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "damsangreen-cba4f",
+    "storage_bucket": "damsangreen-cba4f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1024014572187:android:639ba828c2492a511e043e",
+        "android_client_info": {
+          "package_name": "com.damsan.green"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChTG7NSMLPdv0loVFPVe1wi2cFMR2g3B8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

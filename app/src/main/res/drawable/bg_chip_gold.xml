@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Gold chip for points display -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#E5C158"/>
+    <corners android:radius="20dp"/>
+</shape>

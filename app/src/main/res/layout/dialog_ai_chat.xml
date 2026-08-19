@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_chat_panel"
+    android:padding="18dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:background="@drawable/bg_ai_bubble">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:contentDescription="AI"
+                android:src="@drawable/ic_sparkle"
+                app:tint="@color/white" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/be_vietnam_pro_bold"
+                android:letterSpacing="0"
+                android:text="Trợ lý AI Đam San"
+                android:textColor="@color/ds_text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/be_vietnam_pro_regular"
+                android:letterSpacing="0"
+                android:text="Hỏi về trường, nội trú, môi trường và Dam San Green"
+                android:textColor="@color/ds_text_secondary"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnCloseAi"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_intro_back_button"
+            android:contentDescription="Đóng"
+            android:src="@drawable/ic_close"
+            app:tint="@color/ds_primary_dark" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/chipAskSchool"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_history_summary"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/be_vietnam_pro_medium"
+                android:gravity="center"
+                android:letterSpacing="0"
+                android:paddingHorizontal="13dp"
+                android:text="Giới thiệu trường"
+                android:textColor="@color/ds_primary_dark"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/chipAskDorm"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_history_summary"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/be_vietnam_pro_medium"
+                android:gravity="center"
+                android:letterSpacing="0"
+                android:paddingHorizontal="13dp"
+                android:text="Đời sống nội trú"
+                android:textColor="@color/ds_primary_dark"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/chipAskGreen"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_history_summary"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/be_vietnam_pro_medium"
+                android:gravity="center"
+                android:letterSpacing="0"
+                android:paddingHorizontal="13dp"
+                android:text="Phong trào xanh"
+                android:textColor="@color/ds_primary_dark"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerChat"
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:layout_marginTop="12dp"
+        android:clipToPadding="false"
+        android:overScrollMode="ifContentScrolls"
+        android:paddingBottom="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etChatInput"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_history_item"
+            android:fontFamily="@font/be_vietnam_pro_regular"
+            android:hint="Hỏi AI về trường..."
+            android:imeOptions="actionSend"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="2"
+            android:paddingHorizontal="14dp"
+            android:textColor="@color/ds_text_primary"
+            android:textColorHint="@color/ds_text_hint"
+            android:textSize="14sp" />
+
+        <ImageButton
+            android:id="@+id/btnSend"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_ai_bubble"
+            android:contentDescription="Gửi"
+            android:src="@drawable/ic_arrow_right"
+            app:tint="@color/white" />
+    </LinearLayout>
+</LinearLayout>

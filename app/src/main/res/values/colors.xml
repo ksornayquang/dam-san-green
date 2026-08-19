@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Gen Z Eco palette -->
+    <color name="eco_primary">#1ED760</color>
+    <color name="eco_primary_dark">#00A84F</color>
+    <color name="eco_cyan">#00E5FF</color>
+    <color name="eco_lemon">#FFEA00</color>
+    <color name="eco_background">#F5F7FA</color>
+    <color name="eco_surface">#FFFFFF</color>
+    <color name="eco_text">#1B263B</color>
+    <color name="eco_text_muted">#64748B</color>
+    <color name="eco_border">#D8F2E5</color>
+
+    <!-- ===== Bảng màu chính — Trường PTDTNT Đam San ===== -->
+    <color name="primary_forest_green">#14454F</color>   <!-- Xanh sâu đại ngàn -->
+    <color name="primary_blue">#1565C0</color>            <!-- Xanh logo trường -->
+    <color name="primary_blue_dark">#0D47A1</color>       <!-- Xanh đậm -->
+    <color name="primary_blue_light">#1976D2</color>      <!-- Xanh sáng -->
+    <color name="accent_earth_red">#B5543D</color>        <!-- Đỏ nâu cháy -->
+    <color name="gong_gold">#E0B354</color>               <!-- Vàng tre ngà -->
+    <color name="bg_cotton_white">#FAF7F1</color>         <!-- Trắng ngà thổ cẩm -->
+    <color name="text_ash_gray">#2A2A2A</color>           <!-- Tro than -->
+
+    <!-- Supporting Colors -->
+    <color name="green_light">#E6EEED</color>             <!-- Nền nhạt xanh -->
+    <color name="gold_light">#FDF5E3</color>              <!-- Nền nhạt vàng -->
+    <color name="red_light">#FAEAE6</color>               <!-- Nền nhạt đỏ -->
+    <color name="blue_light">#E3F2FD</color>              <!-- Nền nhạt xanh dương -->
+    <color name="glass_white">#CCF9F6F0</color>           <!-- Glass morphism -->
+    <color name="glass_dark">#CC14454F</color>            <!-- Glass dark -->
+    <color name="white_ivory">#FFFFF0</color>
+
+    <!-- ===== Liquid Glass UI Colors ===== -->
+    <color name="glass_white_light">#B3FFFFFF</color>     <!-- White glass nhẹ -->
+    <color name="glass_border">#55FFFFFF</color>           <!-- Viền glass -->
+    <color name="cta_orange_start">#C45A3D</color>        <!-- CTA gradient start -->
+    <color name="cta_orange_end">#E8734F</color>          <!-- CTA gradient end -->
+    <color name="weather_text">#2D5A27</color>            <!-- Text thời tiết -->
+    <color name="text_white_secondary">#CCFFFFFF</color>  <!-- White text secondary -->
+    <color name="status_bar_transparent">#00000000</color> <!-- Transparent status bar -->
+    <color name="text_medium">#555555</color>              <!-- Text medium gray -->
+
+    <!-- ===== Dam San Green - New Design System Colors ===== -->
+    <!-- Primary palette — Xanh rừng / Thiên nhiên -->
+    <color name="ds_primary">#2D6A4F</color>              <!-- Xanh rừng đậm -->
+    <color name="ds_primary_dark">#1B4332</color>         <!-- Xanh rừng rất đậm -->
+    <color name="ds_primary_light">#52B788</color>        <!-- Xanh mint -->
+    <color name="ds_accent">#95D5B2</color>               <!-- Xanh nhạt -->
+    <color name="ds_accent_light">#D8F3DC</color>         <!-- Xanh rất nhạt -->
+
+    <!-- Background & Surface -->
+    <color name="ds_background">#F8FAF9</color>           <!-- Trắng xanh nhẹ -->
+    <color name="ds_surface">#FFFFFF</color>              <!-- Trắng tinh -->
+    <color name="ds_surface_variant">#F0F7F4</color>      <!-- Xanh nhạt cho card -->
+
+    <!-- Text -->
+    <color name="ds_text_primary">#1B1B2F</color>         <!-- Gần đen, không hoàn toàn đen -->
+    <color name="ds_text_secondary">#4A5568</color>       <!-- Xám trung bình -->
+    <color name="ds_text_hint">#94A3B8</color>            <!-- Xám nhạt cho hint -->
+
+    <!-- Border -->
+    <color name="ds_border">#D1E8DF</color>               <!-- Viền xanh nhạt -->
+    <color name="ds_border_focus">#52B788</color>         <!-- Viền khi focus -->
+
+    <!-- Semantic -->
+    <color name="ds_error">#E53E3E</color>                <!-- Đỏ lỗi -->
+    <color name="ds_error_light">#FFF5F5</color>          <!-- Nền đỏ nhạt -->
+    <color name="ds_error_border">#FED7D7</color>         <!-- Viền đỏ nhạt -->
+    <color name="ds_success">#38A169</color>              <!-- Xanh thành công -->
+    <color name="ds_success_light">#F0FFF4</color>        <!-- Nền xanh nhạt -->
+    <color name="ds_warning">#D69E2E</color>              <!-- Vàng cảnh báo -->
+
+    <!-- Button shadows / overlays -->
+    <color name="ds_primary_shadow">#592D6A4F</color>     <!-- 35% alpha shadow -->
+    <color name="ds_focus_ring">#2652B788</color>         <!-- 15% alpha focus ring -->
+    <color name="ds_ripple_primary">#332D6A4F</color>     <!-- Ripple color -->
+    <color name="ds_ripple_white">#33FFFFFF</color>       <!-- White ripple -->
+
+</resources>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ===== A) PRIMARY BUTTON ===== -->
+    <!-- Gradient green, white text, shadow, ripple -->
+    <style name="DS.Button.Primary">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/btn_height_primary</item>
+        <item name="android:background">@drawable/bg_btn_primary</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro_semibold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:paddingStart">@dimen/btn_padding_h</item>
+        <item name="android:paddingEnd">@dimen/btn_padding_h</item>
+    </style>
+
+    <!-- ===== B) SECONDARY BUTTON ===== -->
+    <!-- Outlined, transparent bg -->
+    <style name="DS.Button.Secondary">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/btn_height_secondary</item>
+        <item name="android:background">@drawable/bg_btn_secondary</item>
+        <item name="android:textColor">@color/ds_primary</item>
+        <item name="android:textSize">@dimen/text_label</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro_semibold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">@dimen/btn_padding_h</item>
+        <item name="android:paddingEnd">@dimen/btn_padding_h</item>
+    </style>
+
+    <!-- ===== C) ICON BUTTON ===== -->
+    <!-- Circle, 44dp, subtle shadow -->
+    <style name="DS.Button.Icon">
+        <item name="android:layout_width">@dimen/btn_icon_size</item>
+        <item name="android:layout_height">@dimen/btn_icon_size</item>
+        <item name="android:background">@drawable/bg_btn_icon</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <!-- ===== D) TEXT BUTTON ===== -->
+    <!-- No bg, no border, primary color -->
+    <style name="DS.Button.Text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/bg_btn_text</item>
+        <item name="android:textColor">@color/ds_primary</item>
+        <item name="android:textSize">@dimen/text_label</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro_medium</item>
+        <item name="android:paddingStart">@dimen/space_sm</item>
+        <item name="android:paddingEnd">@dimen/space_sm</item>
+        <item name="android:paddingTop">@dimen/space_xs</item>
+        <item name="android:paddingBottom">@dimen/space_xs</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+    </style>
+
+    <!-- ===== E) DANGER BUTTON ===== -->
+    <!-- Red tint, for destructive actions -->
+    <style name="DS.Button.Danger">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/btn_height_secondary</item>
+        <item name="android:background">@drawable/bg_btn_danger</item>
+        <item name="android:textColor">@color/ds_error</item>
+        <item name="android:textSize">@dimen/text_label</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro_semibold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">@dimen/btn_padding_h</item>
+        <item name="android:paddingEnd">@dimen/btn_padding_h</item>
+    </style>
+
+</resources>

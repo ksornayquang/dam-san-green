@@ -1,0 +1,19 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    "Users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid == $uid || root.child('Users').child(auth.uid).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.uid == $uid || root.child('Users').child(auth.uid).child('role').val() == 'admin')"
+      }
+    },
+    "Settings": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('Users').child(auth.uid).child('role').val() == 'admin'"
+    },
+    "TrashReports": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+  }
+}

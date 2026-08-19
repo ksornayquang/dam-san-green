@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/bg_news_item"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="14dp">
+
+    <FrameLayout
+        android:id="@+id/newsIconFrame"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_history_summary">
+
+        <ImageView
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:layout_gravity="center"
+            android:contentDescription="Bản tin"
+            android:src="@drawable/ic_leaf"
+            app:tint="@color/ds_primary" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/ivNewsImage"
+        android:layout_width="76dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/bg_map_placeholder"
+        android:contentDescription="Ảnh bản tin"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvNewsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/be_vietnam_pro_semibold"
+            android:letterSpacing="0"
+            android:text="Bản tin xanh"
+            android:textColor="@color/ds_text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvNewsBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/be_vietnam_pro_regular"
+            android:letterSpacing="0"
+            android:lineSpacingExtra="2dp"
+            android:text="Cập nhật hoạt động môi trường của trường."
+            android:textColor="@color/ds_text_secondary"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Banner component: dùng include trong layout -->
+<!-- Hiển thị ảnh banner (nếu có URL), hoặc gradient fallback -->
+<!-- Có overlay gradient để text trắng dễ đọc -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:id="@+id/bannerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <!-- Banner image — loaded from URL via Glide -->
+        <ImageView
+            android:id="@+id/ivBannerImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="Banner trường"
+            android:visibility="gone" />
+
+        <!-- Gradient fallback khi chưa có ảnh banner -->
+        <View
+            android:id="@+id/bannerGradientFallback"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_login_top" />
+
+        <!-- Overlay gradient để text trắng dễ đọc trên ảnh -->
+        <View
+            android:id="@+id/bannerOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_bottom_fade" />
+
+        <!-- Brand content nằm trên banner -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="16dp">
+
+            <!-- Logo + Brand name -->
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_leaf"
+                app:tint="@color/white"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="Logo" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dam San Green"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/be_vietnam_pro_bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Trường PTDTNT THPT Đam San"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_white_secondary"
+                    android:fontFamily="@font/be_vietnam_pro" />
+            </LinearLayout>
+
+            <!-- Nút thay banner — chỉ hiện cho admin -->
+            <ImageButton
+                android:id="@+id/btnChangeBanner"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_camera"
+                android:background="@drawable/bg_icon_circle_glass"
+                android:scaleType="center"
+                android:padding="8dp"
+                android:visibility="gone"
+                android:contentDescription="Thay banner"
+                app:tint="@color/white" />
+        </LinearLayout>
+
+    </FrameLayout>
+</merge>

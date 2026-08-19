@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dam San Green</string>
+    <!-- Lấy key miễn phí tại https://cloud.maptiler.com -->
+    <string name="maptiler_api_key">MxvKy93iUt6mv6LsVqs8</string>
+</resources>

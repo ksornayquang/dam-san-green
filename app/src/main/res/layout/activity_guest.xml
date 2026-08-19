@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- LAYER 0: Map nền -->
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/guestMapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.damsan.green.ui.map.Campus3DMapView
+        android:id="@+id/guestCampus3DMapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <!-- LAYER 1: Gradient overlay -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_guest_overlay"/>
+
+    <!-- LAYER 2: Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="24dp">
+
+            <!-- ===== HERO SECTION ===== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:paddingTop="60dp"
+                android:paddingBottom="24dp">
+
+                <!-- Logo trường — Vòng tròn lớn -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardGuestLogo"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:visibility="gone"
+                    app:cardCornerRadius="70dp"
+                    app:cardElevation="16dp"
+                    app:cardBackgroundColor="@color/white">
+                    <ImageView
+                        android:id="@+id/ivGuestLogo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerInside"
+                        android:padding="8dp"/>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Tên trường -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TRƯỜNG PTDTNT"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:letterSpacing="0.15"
+                    android:layout_marginTop="20dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ĐAM SAN"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:letterSpacing="0.08"
+                    android:layout_marginTop="2dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="6dp">
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:src="@drawable/ic_map_pin"
+                        app:tint="#CCFFFFFF"
+                        android:layout_marginEnd="5dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="EaDrông, Đắk Lắk"
+                        android:textSize="13sp"
+                        android:textColor="#CCFFFFFF"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ===== GIỚI THIỆU CARD ===== -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="28dp"
+                app:cardElevation="12dp"
+                app:cardBackgroundColor="@color/bg_cotton_white"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Về Trường Đam San"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_forest_green"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Trường Phổ Thông Dân Tộc Nội Trú Đam San là ngôi trường nội trú dành cho con em đồng bào dân tộc thiểu số tại Tây Nguyên.\n\nVới sứ mệnh nuôi dưỡng thế hệ trẻ vùng cao, trường luôn đi đầu trong phong trào bảo vệ môi trường Xanh – Sạch – Đẹp."
+                        android:textSize="14sp"
+                        android:textColor="@color/text_ash_gray"
+                        android:lineSpacingExtra="4dp"
+                        android:layout_marginTop="12dp"/>
+
+                    <!-- Phong trào badge -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_guest_badge"
+                        android:padding="14dp">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/ic_leaf"
+                            app:tint="@color/primary_forest_green"
+                            android:padding="7dp"
+                            android:background="@drawable/bg_icon_circle_glass"
+                            android:contentDescription="Dam San Green"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="8dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Dam San Green"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/primary_forest_green"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Phong trào thi đua nhặt rác toàn trường"
+                                android:textSize="12sp"
+                                android:textColor="#666666"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ===== BXH PREVIEW CARD ===== -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="28dp"
+                app:cardElevation="12dp"
+                app:cardBackgroundColor="@color/bg_cotton_white"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bảng Xếp Hạng Thi Đua"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_forest_green"/>
+
+                    <TextView
+                        android:id="@+id/tvGuestRank1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Hạng 1 đang tải..."
+                        android:textSize="15sp"
+                        android:textColor="@color/text_ash_gray"
+                        android:layout_marginTop="12dp"/>
+
+                    <TextView
+                        android:id="@+id/tvGuestRank2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Hạng 2 đang tải..."
+                        android:textSize="15sp"
+                        android:textColor="@color/text_ash_gray"
+                        android:layout_marginTop="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvGuestRank3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Hạng 3 đang tải..."
+                        android:textSize="15sp"
+                        android:textColor="@color/text_ash_gray"
+                        android:layout_marginTop="8dp"/>
+
+                    <!-- Xem thêm -->
+                    <FrameLayout
+                        android:id="@+id/btnViewLeaderboard"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_btn_outline_green"
+                        android:layout_marginTop="16dp"
+                        android:clickable="true"
+                        android:focusable="true">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Xem đầy đủ Bảng xếp hạng →"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary_forest_green"
+                            android:layout_gravity="center"/>
+                    </FrameLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ===== BOTTOM BUTTONS ===== -->
+            <!-- Nút đăng nhập -->
+            <FrameLayout
+                android:id="@+id/btnGuestLogin"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_btn_solid_green"
+                android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:focusable="true">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center">
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_key"
+                        app:tint="@color/white"
+                        android:layout_marginEnd="8dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đăng nhập cho Lớp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+            </FrameLayout>
+
+            <!-- Nút chụp ảnh (KHOÁ) -->
+            <FrameLayout
+                android:id="@+id/btnGuestReport"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_btn_locked"
+                android:layout_marginBottom="32dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:alpha="0.6">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center">
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_lock"
+                        app:tint="#888888"
+                        android:layout_marginEnd="8dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Chụp ảnh báo cáo (Cần đăng nhập)"
+                        android:textSize="13sp"
+                        android:textColor="#888888"/>
+                </LinearLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/guestMapModeToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_map_mode_container"
+        android:elevation="14dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btnGuestMapModeGps"
+            android:layout_width="54dp"
+            android:layout_height="34dp"
+            android:background="@drawable/bg_map_mode_selected"
+            android:fontFamily="@font/be_vietnam_pro_semibold"
+            android:gravity="center"
+            android:letterSpacing="0"
+            android:text="GPS"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/btnGuestMapMode3d"
+            android:layout_width="54dp"
+            android:layout_height="34dp"
+            android:background="@drawable/bg_map_mode_unselected"
+            android:fontFamily="@font/be_vietnam_pro_semibold"
+            android:gravity="center"
+            android:letterSpacing="0"
+            android:text="3D"
+            android:textColor="@color/primary_forest_green"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/btnAiBubbleGuest"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="22dp"
+        android:background="@drawable/bg_ai_bubble"
+        android:clickable="true"
+        android:elevation="14dp"
+        android:focusable="true">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:contentDescription="Trợ lý AI Đam San"
+            android:src="@drawable/ic_sparkle"
+            app:tint="@color/white" />
+    </FrameLayout>
+</FrameLayout>

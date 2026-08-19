@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Color state list for TextInputLayout box stroke -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Error state -->
+    <item android:state_focused="true" android:state_enabled="true"
+        android:color="@color/ds_error"
+        android:alpha="1.0"
+        android:state_activated="true" />
+    <!-- Focused -->
+    <item android:state_focused="true" android:color="@color/ds_primary_light" />
+    <!-- Hovered -->
+    <item android:state_hovered="true" android:color="@color/ds_primary" />
+    <!-- Default -->
+    <item android:color="@color/ds_border" />
+</selector>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingStart="0dp"
+    android:paddingEnd="0dp">
+
+    <TextView
+        android:id="@+id/tvSelectedClassName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="@font/be_vietnam_pro_semibold"
+        android:letterSpacing="0"
+        android:maxLines="1"
+        android:text="11A1"
+        android:textColor="@color/ds_text_primary"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tvSelectedClassGrade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/be_vietnam_pro_regular"
+        android:letterSpacing="0"
+        android:maxLines="1"
+        android:text="Khối 11"
+        android:textColor="@color/ds_text_secondary"
+        android:textSize="10sp" />
+</LinearLayout>

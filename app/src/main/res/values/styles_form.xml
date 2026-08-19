@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ===== Typography Styles ===== -->
+
+    <style name="DS.Text.H1">
+        <item name="android:textSize">@dimen/text_h1</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="android:textColor">@color/ds_text_primary</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro_bold</item>
+    </style>
+
+    <style name="DS.Text.H2">
+        <item name="android:textSize">@dimen/text_h2</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
+        <item name="android:textColor">@color/ds_text_primary</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro_semibold</item>
+    </style>
+
+    <style name="DS.Text.Body">
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:lineSpacingMultiplier">1.6</item>
+        <item name="android:textColor">@color/ds_text_primary</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro</item>
+    </style>
+
+    <style name="DS.Text.Label">
+        <item name="android:textSize">@dimen/text_label</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+        <item name="android:textColor">@color/ds_text_secondary</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro_medium</item>
+    </style>
+
+    <style name="DS.Text.Caption">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
+        <item name="android:textColor">@color/ds_text_secondary</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro</item>
+    </style>
+
+    <!-- ===== Form Styles ===== -->
+
+    <!-- Material TextInputLayout — Outlined style with floating label -->
+    <style name="DS.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/ds_input_stroke_color</item>
+        <item name="boxStrokeWidth">1.5dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="boxCornerRadiusTopStart">@dimen/radius_md</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_md</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_md</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_md</item>
+        <item name="boxBackgroundColor">@color/ds_surface</item>
+        <item name="hintTextColor">@color/ds_primary</item>
+        <item name="android:textColorHint">@color/ds_text_hint</item>
+        <item name="hintTextAppearance">@style/DS.TextInputLayout.HintText</item>
+        <item name="helperTextTextAppearance">@style/DS.TextInputLayout.HelperText</item>
+        <item name="errorTextAppearance">@style/DS.TextInputLayout.ErrorText</item>
+        <item name="startIconTint">@color/ds_text_secondary</item>
+        <item name="endIconTint">@color/ds_text_secondary</item>
+    </style>
+
+    <style name="DS.TextInputLayout.HintText" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:textColor">@color/ds_primary</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro_medium</item>
+    </style>
+
+    <style name="DS.TextInputLayout.HelperText" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:textColor">@color/ds_text_secondary</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro</item>
+    </style>
+
+    <style name="DS.TextInputLayout.ErrorText" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:textColor">@color/ds_error</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro</item>
+    </style>
+
+    <!-- TextInputEditText inside the TextInputLayout -->
+    <style name="DS.TextInputEditText" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:textColor">@color/ds_text_primary</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+    </style>
+
+    <!-- ===== Section Header ===== -->
+    <style name="DS.SectionHeader">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/ds_primary</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro_semibold</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <!-- ===== Menu Item Style ===== -->
+    <style name="DS.MenuItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="DS.MenuItem.Title">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/ds_text_primary</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro_medium</item>
+    </style>
+
+    <style name="DS.MenuItem.Subtitle">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:textColor">@color/ds_text_hint</item>
+        <item name="android:fontFamily">@font/be_vietnam_pro</item>
+    </style>
+
+</resources>

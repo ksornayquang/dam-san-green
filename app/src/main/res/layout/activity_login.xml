@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ds_background"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="32dp">
+
+        <!-- ===== TOP GRADIENT BANNER ===== -->
+        <FrameLayout
+            android:id="@+id/topBanner"
+            android:layout_width="match_parent"
+            android:layout_height="236dp"
+            android:background="@drawable/bg_login_top"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/ivLoginBanner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:contentDescription="Banner trường"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_bottom_fade"/>
+        </FrameLayout>
+
+        <!-- ===== LOGO + BRAND ===== -->
+        <LinearLayout
+            android:id="@+id/logoContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="44dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Logo trường -->
+            <ImageView
+                android:id="@+id/ivLoginLogo"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:visibility="gone"
+                android:contentDescription="Logo trường" />
+
+            <!-- Brand name -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_leaf"
+                    android:layout_marginEnd="6dp"/>
+
+                <TextView
+                    android:id="@+id/tvLoginAppName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dam San Green"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/be_vietnam_pro_bold"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvLoginSchoolName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trường PTDTNT THPT Đam San"
+                android:textSize="12sp"
+                android:textColor="@color/text_white_secondary"
+                android:fontFamily="@font/be_vietnam_pro"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- ===== LOGIN CARD ===== -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/loginCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="-18dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="12dp"
+            app:cardBackgroundColor="@color/ds_surface"
+            app:layout_constraintTop_toBottomOf="@id/topBanner">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <!-- Title -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Đăng nhập tài khoản lớp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/ds_text_primary"
+                    android:fontFamily="@font/be_vietnam_pro_bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chọn lớp và nhập mật khẩu để bắt đầu"
+                    android:textSize="13sp"
+                    android:textColor="@color/ds_text_secondary"
+                    android:fontFamily="@font/be_vietnam_pro"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="24dp"/>
+
+                <!-- ===== CHỌN LỚP — Spinner with label ===== -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CHỌN LỚP"
+                    style="@style/DS.SectionHeader"
+                    android:layout_marginBottom="8dp"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="62dp"
+                    android:background="@drawable/bg_spinner_ds"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_user"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginStart="16dp"
+                        app:tint="@color/ds_text_secondary"/>
+
+                    <Spinner
+                        android:id="@+id/spinnerClass"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingStart="44dp"
+                        android:paddingEnd="40dp"
+                        android:popupBackground="@drawable/bg_spinner_dropdown_popup"
+                        android:dropDownVerticalOffset="8dp"
+                        android:dropDownWidth="match_parent"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/be_vietnam_pro"/>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_dropdown"
+                        android:layout_gravity="end|center_vertical"
+                        android:layout_marginEnd="16dp"
+                        app:tint="@color/ds_text_secondary"/>
+                </FrameLayout>
+
+                <!-- ===== MẬT KHẨU — Material TextInputLayout with floating label ===== -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/DS.TextInputLayout"
+                    android:hint="Mật khẩu"
+                    app:startIconDrawable="@drawable/ic_lock"
+                    app:startIconTint="@color/ds_text_secondary"
+                    app:endIconMode="password_toggle"
+                    app:endIconDrawable="@drawable/ic_eye"
+                    app:endIconTint="@color/ds_text_secondary"
+                    app:errorEnabled="true"
+                    android:layout_marginBottom="8dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:textSize="16sp"
+                        android:textColor="@color/ds_text_primary"
+                        android:fontFamily="@font/be_vietnam_pro"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/tvForgotPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quên mật khẩu?"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/ds_primary"
+                    android:fontFamily="@font/be_vietnam_pro_semibold"
+                    android:paddingVertical="6dp"
+                    android:layout_gravity="end"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_marginBottom="4dp"/>
+
+                <!-- Error text -->
+                <TextView
+                    android:id="@+id/tvError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ds_error"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/be_vietnam_pro"
+                    android:drawablePadding="6dp"
+                    android:visibility="gone"/>
+
+                <!-- ===== NÚT ĐĂNG NHẬP — Primary Button ===== -->
+                <FrameLayout
+                    android:id="@+id/btnLoginContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_btn_primary"
+                    android:elevation="4dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/btnLoginText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đăng nhập"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/be_vietnam_pro_semibold"
+                        android:layout_gravity="center"
+                        android:drawableStart="@drawable/ic_arrow_right"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@color/white"/>
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:indeterminateTint="@color/white"
+                        android:visibility="gone"/>
+                </FrameLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ===== NÚT KHÁM PHÁ (KHÁCH) — Secondary Button ===== -->
+        <FrameLayout
+            android:id="@+id/btnGuestMode"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_btn_secondary"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@id/loginCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_leaf"
+                    app:tint="@color/ds_primary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  Khám phá trường (Chế độ Khách)"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/ds_primary"
+                    android:fontFamily="@font/be_vietnam_pro_semibold"/>
+            </LinearLayout>
+        </FrameLayout>
+
+        <!-- ===== FOOTER HINT ===== -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/btnGuestMode"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_info"
+                app:tint="@color/ds_text_secondary"
+                android:layout_marginEnd="6dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Không biết mật khẩu? Hỏi giáo viên phụ trách"
+                android:textSize="12sp"
+                android:textColor="@color/ds_text_secondary"
+                android:fontFamily="@font/be_vietnam_pro"/>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dark gradient overlay for guest landing page -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="#E014454F"
+        android:centerColor="#9914454F"
+        android:endColor="#5014454F"
+        android:angle="270"/>
+</shape>
