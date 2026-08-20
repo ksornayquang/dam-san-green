@@ -207,6 +207,7 @@ function App() {
   if (!authReady) return <Splash />;
   if (!profile) {
     return <LoginScreen
+      onInstall={() => void handleInstall()}
       onDemo={() => {
         sessionStorage.setItem("dsg-demo", "true");
         setProfile(demoProfile);
@@ -299,7 +300,7 @@ function Splash() {
   );
 }
 
-function LoginScreen({ onDemo, onGuest }: { onDemo: () => void; onGuest: () => void }) {
+function LoginScreen({ onDemo, onGuest, onInstall }: { onDemo: () => void; onGuest: () => void; onInstall: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -340,6 +341,11 @@ function LoginScreen({ onDemo, onGuest }: { onDemo: () => void; onGuest: () => v
         <div className="or"><span />hoặc<span /></div>
         <button className="demo-button" onClick={onDemo}><Sparkles size={18} />Xem bản trình diễn dành cho BGK</button>
         <button className="guest-button" onClick={onGuest}><School size={18} />Khách tham quan · Giới thiệu trường</button>
+        <div className="judge-downloads">
+          <div><strong>Trải nghiệm trên điện thoại</strong><span>BGK chọn một trong hai cách bên dưới</span></div>
+          <a className="download-apk" href="/downloads/dam-san-green.apk" download><Download size={17} />Tải ứng dụng Android (APK)</a>
+          <button className="install-pwa" onClick={onInstall}><Sparkles size={17} />Cài ứng dụng Web trên Android/iPhone</button>
+        </div>
         <p className="security-note"><ShieldCheck size={16} />Bản trình diễn không làm thay đổi dữ liệu thi đua thật.</p>
       </section>
     </div>
