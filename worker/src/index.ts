@@ -74,17 +74,23 @@ async function uploadToCloudinary(request: Request, env: Env) {
 
 async function analyzeWithGemini(request: Request, env: Env) {
   requireSecrets(env, ["GEMINI_API_KEY"]);
-  const { file } = await readImage(request);
-  const base64 = arrayBufferToBase64(await file.arrayBuffer());
-  const prompt = `Bạn là chuyên gia môi trường học đường. Chỉ phân tích vật thể nhìn thấy rõ trong ảnh.
+  const { before, after } = await readReportImages(request);
+  const beforeBase64 = arrayBufferToBase64(await before.arrayBuffer());
+  const afterBase64 = arrayBufferToBase64(await after.arrayBuffer());
+  const prompt = `Bạn là chuyên gia môi trường học đường, chịu trách nhiệm xác thực một báo cáo dọn rác.
+Ảnh 1 là hiện trạng trước khi dọn; ảnh 2 là minh chứng sau khi người dùng đã tới thùng rác.
 RECYCLABLE gồm chai nhựa, lon kim loại hoặc nhôm, giấy và bìa carton sạch.
 NON_RECYCLABLE gồm túi nilon bẩn, hộp xốp, vỏ kẹo và thức ăn thừa.
-Nếu không có rác hoặc ảnh không đủ rõ: is_trash=false, trash_name="Không xác định", category="NON_RECYCLABLE", estimated_kg=0.
+Chỉ coi after_is_disposed=true khi ảnh 2 cho thấy rác đã ở trong hoặc ngay trước một thùng phù hợp; không được suy đoán chỉ từ lời mô tả.
+Nếu ảnh 1 không có rác, ảnh mờ hoặc ảnh 2 không chứng minh được việc bỏ rác: is_trash=false hoặc after_is_disposed=false, confidence dưới 70.
 estimated_kg là tổng khối lượng rác nhìn thấy, ước lượng thận trọng theo kg.
-Chỉ trả về JSON đúng schema, không markdown và không giải thích.`;
+confidence là độ tin cậy 0-100 cho toàn bộ cặp ảnh. Chỉ trả về JSON đúng schema, không markdown và không giải thích.`;
   const body = {
     contents: [{ role: "user", parts: [
-      { inline_data: { mime_type: file.type || "image/jpeg", data: base64 } },
+      { text: "ẢNH 1 - HIỆN TRẠNG TRƯỚC:" },
+      { inline_data: { mime_type: before.type || "image/jpeg", data: beforeBase64 } },
+      { text: "ẢNH 2 - MINH CHỨNG SAU:" },
+      { inline_data: { mime_type: after.type || "image/jpeg", data: afterBase64 } },
       { text: prompt }
     ] }],
     generationConfig: {
@@ -97,9 +103,12 @@ Chỉ trả về JSON đúng schema, không markdown và không giải thích.`;
           is_trash: { type: "BOOLEAN" },
           trash_name: { type: "STRING" },
           category: { type: "STRING", enum: ["RECYCLABLE", "NON_RECYCLABLE"] },
-          estimated_kg: { type: "NUMBER" }
+          estimated_kg: { type: "NUMBER" },
+          after_is_disposed: { type: "BOOLEAN" },
+          confidence: { type: "NUMBER" },
+          reason: { type: "STRING" }
         },
-        required: ["is_trash", "trash_name", "category", "estimated_kg"]
+        required: ["is_trash", "trash_name", "category", "estimated_kg", "after_is_disposed", "confidence", "reason"]
       }
     }
   };
@@ -123,6 +132,18 @@ async function readImage(request: Request): Promise<{ file: File; stage: string 
   if (!file.type.startsWith("image/")) throw new Error("INPUT: Tệp tải lên không phải ảnh.");
   if (file.size > 8 * 1024 * 1024) throw new Error("INPUT: Ảnh vượt quá giới hạn 8 MB.");
   return { file, stage: String(data.get("stage") || "trash").replace(/[^a-z0-9_-]/gi, "") };
+}
+
+async function readReportImages(request: Request): Promise<{ before: File; after: File }> {
+  const data = await request.formData();
+  const before = data.get("before");
+  const after = data.get("after");
+  for (const [name, file] of [["before", before], ["after", after]] as const) {
+    if (!(file instanceof File)) throw new Error(`INPUT: Không tìm thấy ảnh ${name}.`);
+    if (!file.type.startsWith("image/")) throw new Error(`INPUT: Ảnh ${name} không hợp lệ.`);
+    if (file.size > 8 * 1024 * 1024) throw new Error(`INPUT: Ảnh ${name} vượt quá 8 MB.`);
+  }
+  return { before: before as File, after: after as File };
 }
 
 function requireSecrets(env: Env, keys: (keyof Env)[]) {

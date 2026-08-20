@@ -11,7 +11,8 @@ data class WasteAiReview(
     val confidence: Int = 0,
     val reason: String = "",
     val warnings: String = "",
-    val autoApproved: Boolean = false
+    val autoApproved: Boolean = false,
+    val afterIsDisposed: Boolean = false
 ) {
     val isUsable: Boolean
         get() = reviewStatus != "failed" && confidence > 0

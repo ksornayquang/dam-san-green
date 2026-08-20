@@ -40,12 +40,12 @@ ALLOWED_ORIGIN = "https://dam-san-green.pages.dev"
 
 Sau đó deploy Worker lại.
 
-## 3. Biến URL Worker thành cấu hình web
+## 3. Nối Cloudflare Pages với Worker
 
-Trong Cloudflare Pages, tạo biến môi trường:
+Frontend dùng `/api/*` nên không còn hiện lỗi thiếu `VITE_API_BASE_URL`. Tạo biến server-side trong Pages Functions:
 
 ```text
-VITE_API_BASE_URL=https://dam-san-green-api.<tai-khoan>.workers.dev
+API_ORIGIN=https://dam-san-green-api.<tai-khoan>.workers.dev
 ```
 
 Các giá trị Firebase công khai đã có mặc định theo dự án hiện tại. Có thể khai báo lại bằng các biến trong `web/.env.example`.
@@ -71,7 +71,7 @@ git push -u origin main
 3. Root directory: `web`.
 4. Build command: `npm run build`.
 5. Build output directory: `dist`.
-6. Thêm biến `VITE_API_BASE_URL`.
+6. Thêm biến `API_ORIGIN` ở phần Variables and Secrets (không thêm vào Vite public env).
 7. Deploy và nhận URL `https://dam-san-green.pages.dev`.
 
 ## 6. Firebase Auth

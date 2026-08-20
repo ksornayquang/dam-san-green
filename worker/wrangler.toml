@@ -5,4 +5,4 @@ compatibility_date = "2026-08-01"
 [vars]
 FIREBASE_PROJECT_ID = "damsangreen-cba4f"
 GEMINI_MODEL = "gemini-2.5-flash"
-ALLOWED_ORIGIN = "http://localhost:5173"
+ALLOWED_ORIGIN = "https://dam-san-green.pages.dev,http://localhost:5173"

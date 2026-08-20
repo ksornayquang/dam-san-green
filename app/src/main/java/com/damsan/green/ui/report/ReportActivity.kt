@@ -1,7 +1,6 @@
 package com.damsan.green.ui.report
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -96,7 +95,8 @@ class ReportActivity : AppCompatActivity() {
                         beforePhotoUri = uri
                         afterPhotoUri = null
                         trashType = null
-                        afterPhotoCard.visibility = View.GONE
+                        afterPhotoCard.visibility = View.VISIBLE
+                        captureStage = CaptureStage.AFTER
                         btnSubmit.isEnabled = false
                         btnSubmit.visibility = View.INVISIBLE
                         ImageViewCompat.setImageTintList(ivPreview, null)
@@ -104,7 +104,8 @@ class ReportActivity : AppCompatActivity() {
                         Glide.with(this).load(uri).centerCrop().into(ivPreview)
                         saveDraft()
                         fetchGPS()
-                        showTrashTypeDialog()
+                        tvStepGuide.text = "BƯỚC 2/2  •  TỚI THÙNG RÁC RỒI CHỤP MINH CHỨNG"
+                        tvStatus.text = "Ảnh hiện trạng đã lưu. Bạn có thể tạm dừng, tới thùng phù hợp rồi chụp ảnh minh chứng."
                     }
                     CaptureStage.AFTER -> {
                         afterPhotoUri = uri
@@ -203,8 +204,7 @@ class ReportActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         btnCamera.setOnClickListener {
-            if (beforePhotoUri != null && trashType == null) showTrashTypeDialog()
-            else checkAndOpenCamera()
+            checkAndOpenCamera()
         }
         
         ivPreview.setOnClickListener { captureStage = CaptureStage.BEFORE; checkAndOpenCamera() }
@@ -308,24 +308,6 @@ class ReportActivity : AppCompatActivity() {
         cameraLauncher.launch(intent)
     }
 
-    private fun showTrashTypeDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Phân loại rác")
-            .setItems(arrayOf("Rác tái chế (Nhựa, Giấy...)\n→ Thùng tái chế của trường", "Rác sinh hoạt (Không tái chế)\n→ Thùng rác lớp")) { _, which ->
-                trashType = if (which == 0) "recyclable" else "household"
-                captureStage = CaptureStage.AFTER
-                tvStepGuide.text = "BƯỚC 2/2  •  CHỤP ẢNH TRONG THÙNG"
-                tvStatus.text = if (which == 0) {
-                    "Đã lưu ảnh hiện trạng. Khi tới thùng tái chế của trường, bấm nút camera để chụp minh chứng."
-                } else {
-                    "Đã lưu ảnh hiện trạng. Khi tới thùng rác lớp, bấm nút camera để chụp minh chứng."
-                }
-                saveDraft()
-            }
-            .setOnCancelListener { showSnackbar("Cần phân loại và chụp ảnh xác thực để tiếp tục.", true) }
-            .show()
-    }
-
     private fun createImageFile(): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
@@ -398,11 +380,6 @@ class ReportActivity : AppCompatActivity() {
             showSnackbar("Cần chụp ảnh rác đã bỏ vào đúng thùng để xác thực!", true)
             return
         }
-        val selectedTrashType = trashType ?: run {
-            showSnackbar("Hãy chọn loại rác trước khi gửi!", true)
-            return
-        }
-
         val uid = firebaseRepo.getCurrentUser()?.uid ?: run {
             showSnackbar("Chưa đăng nhập!", true)
             return
@@ -431,10 +408,9 @@ class ReportActivity : AppCompatActivity() {
                             onFailure = { e -> setUploadState(false); showError("Lỗi upload ảnh xác thực: ${e.message}") },
                             onSuccess = { afterUrl ->
                         tvStatus.text = "AI đang kiểm tra minh chứng..."
-                        val aiReview = wasteAiReviewService.analyzeTrashPhoto(compressedBefore)
-                        val expectedCategory = if (selectedTrashType == "recyclable") "RECYCLABLE" else "NON_RECYCLABLE"
-                        val categoryMatches = aiReview.category == expectedCategory
-                        val reportStatus = if (aiReview.autoApproved && aiReview.isTrash && categoryMatches) "approved" else "pending"
+                        val aiReview = wasteAiReviewService.analyzeTrashPhotos(compressedBefore, compressedAfter)
+                        val inferredTrashType = if (aiReview.category == "RECYCLABLE") "recyclable" else "household"
+                        val reportStatus = if (aiReview.autoApproved && aiReview.isTrash && aiReview.afterIsDisposed) "approved" else "pending"
                         val reportPoints = pointsForEstimatedWaste(aiReview.estimatedKg)
                         val isDemoMode = DemoModeSettings.isEnabled(this@ReportActivity)
 
@@ -452,7 +428,7 @@ class ReportActivity : AppCompatActivity() {
                             imageUrl = beforeUrl,
                             imageBeforeUrl = beforeUrl,
                             imageAfterUrl = afterUrl,
-                            trashType = selectedTrashType,
+                            trashType = inferredTrashType,
                             latitude = currentLat,
                             longitude = currentLon,
                             timestamp = System.currentTimeMillis(),
@@ -474,6 +450,7 @@ class ReportActivity : AppCompatActivity() {
                             aiReason = aiReview.reason,
                             aiWarnings = aiReview.warnings,
                             aiAutoApproved = aiReview.autoApproved,
+                            aiAfterIsDisposed = aiReview.afterIsDisposed,
                             aiAnalyzedAt = System.currentTimeMillis()
                         )
 
@@ -492,11 +469,7 @@ class ReportActivity : AppCompatActivity() {
                                 if (reportStatus == "approved") {
                                     showSuccess(className, reportPoints)
                                 } else {
-                                    val reason = if (!categoryMatches) {
-                                        "Phân loại bạn chọn chưa khớp kết quả AI (${aiReview.category.ifBlank { "không xác định" }})."
-                                    } else {
-                                        "AI chưa xác nhận rõ có rác."
-                                    }
+                                    val reason = aiReview.reason.ifBlank { "AI chưa xác nhận đủ ảnh trước và ảnh minh chứng sau." }
                                     showPendingReview(reason)
                                 }
                             },
@@ -611,11 +584,11 @@ class ReportActivity : AppCompatActivity() {
             btnSubmit.visibility = View.VISIBLE
             tvStepGuide.text = "HOÀN TẤT  •  ĐỦ 2 ẢNH XÁC THỰC"
             tvStatus.text = "Đã khôi phục bản nháp. Bạn có thể gửi báo cáo."
-        } else if (beforePhotoUri != null && trashType != null) {
+        } else if (beforePhotoUri != null) {
+            afterPhotoCard.visibility = View.VISIBLE
+            captureStage = CaptureStage.AFTER
             tvStepGuide.text = "BƯỚC 2/2  •  CHỜ ẢNH TRONG THÙNG"
             tvStatus.text = "Bản nháp đã khôi phục. Tới đúng thùng rác rồi bấm camera để chụp minh chứng."
-        } else if (beforePhotoUri != null) {
-            tvStatus.text = "Bản nháp đã khôi phục. Hãy chọn loại rác để tiếp tục."
         }
         if (currentLat != 0.0 && currentLon != 0.0) {
             tvLocation.text = locationHelper.formatCoordinates(currentLat, currentLon)

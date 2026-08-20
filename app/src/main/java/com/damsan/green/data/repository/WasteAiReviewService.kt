@@ -24,7 +24,7 @@ class WasteAiReviewService {
         .writeTimeout(25, TimeUnit.SECONDS)
         .build()
 
-    suspend fun analyzeTrashPhoto(imageFile: File): WasteAiReview = withContext(Dispatchers.IO) {
+    suspend fun analyzeTrashPhotos(beforeFile: File, afterFile: File): WasteAiReview = withContext(Dispatchers.IO) {
         if (!hasGeminiApiKey()) {
             return@withContext WasteAiReview(
                 reviewStatus = STATUS_NEEDS_REVIEW,
@@ -39,8 +39,9 @@ class WasteAiReviewService {
         }
 
         runCatching {
-            val imageBase64 = Base64.encodeToString(imageFile.readBytes(), Base64.NO_WRAP)
-            val requestBody = buildRequestBody(imageBase64)
+            val beforeBase64 = Base64.encodeToString(beforeFile.readBytes(), Base64.NO_WRAP)
+            val afterBase64 = Base64.encodeToString(afterFile.readBytes(), Base64.NO_WRAP)
+            val requestBody = buildRequestBody(beforeBase64, afterBase64)
             val request = Request.Builder()
                 .url("https://generativelanguage.googleapis.com/v1beta/models/${BuildConfig.GEMINI_MODEL}:generateContent?key=${BuildConfig.GEMINI_API_KEY}")
                 .post(requestBody.toRequestBody("application/json".toMediaType()))
@@ -59,9 +60,10 @@ class WasteAiReviewService {
         }
     }
 
-    private fun buildRequestBody(imageBase64: String): String {
+    private fun buildRequestBody(beforeBase64: String, afterBase64: String): String {
         val prompt = """
             Bạn là chuyên gia môi trường học đường, chuyên nhận diện rác từ ảnh hiện trường.
+            Ảnh 1 là hiện trạng trước; ảnh 2 là minh chứng sau khi người dùng tới thùng rác.
             Chỉ phân tích vật thể nhìn thấy rõ trong ảnh, không suy đoán vật bị che khuất.
 
             Quy tắc phân loại bắt buộc:
@@ -70,6 +72,8 @@ class WasteAiReviewService {
             - Nếu có nhiều loại rác, chọn category theo vật thể rác chiếm diện tích lớn nhất.
             - Nếu ảnh không có rác, ảnh mờ, chỉ có người/cảnh vật hoặc không đủ bằng chứng: is_trash=false,
               trash_name="Không xác định", category="NON_RECYCLABLE", estimated_kg=0.
+            - after_is_disposed chỉ là true khi ảnh 2 cho thấy rác đã ở trong hoặc ngay trước thùng phù hợp.
+            - confidence là độ tin cậy 0-100 của toàn bộ cặp ảnh; nếu không chắc thì dưới 70.
             - trash_name phải là tên cụ thể bằng tiếng Việt, ví dụ "Lon nước Bò Húc", "Chai nhựa PET".
             - estimated_kg là tổng khối lượng rác nhìn thấy trong ảnh, tính bằng kg và phải ước lượng thận trọng.
               Tham chiếu: mảnh giấy/vỏ kẹo 0.005-0.02 kg; lon rỗng khoảng 0.015 kg;
@@ -78,16 +82,23 @@ class WasteAiReviewService {
 
             Chỉ trả về đúng một JSON thuần túy, không markdown, không khối code, không giải thích,
             không thêm khóa ngoài bốn khóa sau:
-            {"is_trash":boolean,"trash_name":"Tên vật thể","category":"RECYCLABLE hoặc NON_RECYCLABLE","estimated_kg":number}
+            {"is_trash":boolean,"trash_name":"Tên vật thể","category":"RECYCLABLE hoặc NON_RECYCLABLE","estimated_kg":number,"after_is_disposed":boolean,"confidence":number,"reason":"ngắn gọn"}
         """.trimIndent()
 
         val parts = JSONArray()
+            .put(JSONObject().put("text", "ẢNH 1 - HIỆN TRẠNG TRƯỚC:"))
             .put(
                 JSONObject().put(
                     "inline_data",
                     JSONObject()
                         .put("mime_type", "image/jpeg")
-                        .put("data", imageBase64)
+                        .put("data", beforeBase64)
+                )
+            )
+            .put(JSONObject().put("text", "ẢNH 2 - MINH CHỨNG SAU:"))
+            .put(
+                JSONObject().put(
+                    "inline_data", JSONObject().put("mime_type", "image/jpeg").put("data", afterBase64)
                 )
             )
             .put(JSONObject().put("text", prompt))
@@ -119,10 +130,13 @@ class WasteAiReviewService {
                                             .put("enum", JSONArray().put(CATEGORY_RECYCLABLE).put(CATEGORY_NON_RECYCLABLE))
                                     )
                                     .put("estimated_kg", JSONObject().put("type", "NUMBER"))
+                                    .put("after_is_disposed", JSONObject().put("type", "BOOLEAN"))
+                                    .put("confidence", JSONObject().put("type", "NUMBER"))
+                                    .put("reason", JSONObject().put("type", "STRING"))
                             )
                             .put(
                                 "required",
-                                JSONArray().put("is_trash").put("trash_name").put("category").put("estimated_kg")
+                                JSONArray().put("is_trash").put("trash_name").put("category").put("estimated_kg").put("after_is_disposed").put("confidence").put("reason")
                             )
                     )
             )
@@ -147,7 +161,9 @@ class WasteAiReviewService {
         val rawCategory = payload.optString("category", "").uppercase(Locale.US)
         val category = rawCategory.takeIf { it in VALID_CATEGORIES }.orEmpty()
         val estimatedKg = payload.optDouble("estimated_kg", 0.0).sanitizeEstimatedKg(isTrash)
-        val classificationValid = isTrash && trashName != "Không xác định" && category.isNotBlank()
+        val afterIsDisposed = payload.optBoolean("after_is_disposed", false)
+        val confidence = payload.optInt("confidence", 0).coerceIn(0, 100)
+        val classificationValid = isTrash && trashName != "Không xác định" && category.isNotBlank() && afterIsDisposed && confidence >= 70
         val wasteType = when (category) {
             CATEGORY_RECYCLABLE -> "recyclable"
             CATEGORY_NON_RECYCLABLE -> "non_recyclable"
@@ -162,10 +178,11 @@ class WasteAiReviewService {
             wasteType = wasteType,
             detectedItems = if (isTrash) 1 else 0,
             estimatedKg = estimatedKg,
-            confidence = if (classificationValid) 100 else 0,
-            reason = if (classificationValid) "Đã nhận diện $trashName thuộc nhóm $category." else "Ảnh không đủ bằng chứng có rác.",
+            confidence = confidence,
+            reason = payload.optString("reason").ifBlank { if (classificationValid) "Đã nhận diện $trashName và xác thực ảnh sau." else "Ảnh chưa đủ bằng chứng." },
             warnings = if (classificationValid) "" else "Cần Ban thi đua kiểm tra thủ công",
-            autoApproved = classificationValid
+            autoApproved = classificationValid,
+            afterIsDisposed = afterIsDisposed
         )
     }
 

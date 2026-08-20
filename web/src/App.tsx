@@ -19,7 +19,6 @@ import {
   Menu,
   MessageCircle,
   Pause,
-  Recycle,
   RotateCcw,
   Send,
   Settings,
@@ -43,7 +42,7 @@ import {
   observeReports,
   updateReportStatus
 } from "./lib/firebase";
-import { analyzeImage, pointsForEstimatedWaste, uploadImage } from "./lib/api";
+import { analyzeImages, pointsForEstimatedWaste, uploadImage } from "./lib/api";
 import { clearDraft, loadDraft, saveDraft } from "./lib/drafts";
 import type { AiReview, Ranking, ReportDraft, TrashReport, TrashType, UserProfile } from "./types";
 import CampusMap from "./components/CampusMap";
@@ -104,6 +103,7 @@ function demoReport(id: string, className: string, points: number, name: string,
     aiEstimatedKg: kg,
     aiReason: "Ảnh minh chứng hợp lệ",
     aiAutoApproved: true,
+    aiAfterIsDisposed: true,
     aiAnalyzedAt: timestamp
   };
 }
@@ -469,14 +469,14 @@ function ReportPage({ profile, onDone, notify }: { profile: UserProfile; onDone:
   }, []);
 
   useEffect(() => {
-    if (draft.beforeFile || draft.reporterName || draft.trashType) void saveDraft({ ...draft, savedAt: Date.now() });
+    if (draft.beforeFile || draft.reporterName) void saveDraft({ ...draft, savedAt: Date.now() });
   }, [draft]);
 
   const setPhoto = (stage: "before" | "after") => (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     setDraft((current) => ({ ...current, [stage === "before" ? "beforeFile" : "afterFile"]: file, savedAt: Date.now() }));
-    setStatus(stage === "before" ? "Ảnh hiện trạng đã lưu. Chọn loại rác để tiếp tục." : "Đã đủ hai ảnh xác thực. Kiểm tra và gửi báo cáo.");
+    setStatus(stage === "before" ? "Ảnh hiện trạng đã lưu. Bạn có thể tạm dừng và chụp ảnh minh chứng khi tới thùng rác." : "Đã đủ hai ảnh xác thực. AI sẽ tự phân loại khi gửi.");
   };
 
   const getLocation = () => {
@@ -517,7 +517,6 @@ function ReportPage({ profile, onDone, notify }: { profile: UserProfile; onDone:
     if (!navigator.onLine && !profile.demo) return notify("Không có Internet. Bản nháp vẫn được giữ trên máy.", "error");
     if (!draft.reporterName.trim()) return notify("Hãy nhập tên người báo cáo.", "error");
     if (!draft.beforeFile || !draft.afterFile) return notify("Cần đủ ảnh trước và ảnh sau.", "error");
-    if (!draft.trashType) return notify("Hãy chọn loại rác.", "error");
     if ((draft.latitude == null || draft.longitude == null) && !profile.demo) return notify("Hãy lấy tọa độ GPS trước khi gửi.", "error");
     const distance = draft.latitude != null && draft.longitude != null ? distanceMeters(draft.latitude, draft.longitude, SCHOOL.lat, SCHOOL.lon) : 0;
     if (!demoLocation && distance > MAX_DISTANCE) return notify(`Bạn đang cách trường ${Math.round(distance)} m. Chỉ bật chế độ BGK khi trình diễn.`, "error");
@@ -531,18 +530,21 @@ function ReportPage({ profile, onDone, notify }: { profile: UserProfile; onDone:
         await new Promise((resolve) => setTimeout(resolve, 950));
         review = {
           is_trash: true,
-          trash_name: draft.trashType === "recyclable" ? "Chai nhựa và lon nước" : "Rác sinh hoạt",
-          category: draft.trashType === "recyclable" ? "RECYCLABLE" : "NON_RECYCLABLE",
-          estimated_kg: draft.trashType === "recyclable" ? 0.42 : 0.18
+          trash_name: "Chai nhựa PET",
+          category: "RECYCLABLE",
+          estimated_kg: 0.42,
+          after_is_disposed: true,
+          confidence: 96,
+          reason: "Ảnh trước có rác và ảnh sau thể hiện rác trong thùng."
         };
       } else {
         setStatus("Đang tải hai ảnh minh chứng...");
         [beforeUrl, afterUrl] = await Promise.all([uploadImage(draft.beforeFile, "before"), uploadImage(draft.afterFile, "after")]);
         setStatus("AI đang nhận diện và ước lượng khối lượng...");
-        review = await analyzeImage(draft.beforeFile);
+        review = await analyzeImages(draft.beforeFile, draft.afterFile);
       }
-      const expected = draft.trashType === "recyclable" ? "RECYCLABLE" : "NON_RECYCLABLE";
-      const approved = review.is_trash && review.category === expected;
+      const inferredType: TrashType = review.category === "RECYCLABLE" ? "recyclable" : "household";
+      const approved = review.is_trash && review.after_is_disposed && review.confidence >= 70;
       const points = pointsForEstimatedWaste(review.estimated_kg);
       const report: Omit<TrashReport, "id"> = {
         className: profile.className,
@@ -550,7 +552,7 @@ function ReportPage({ profile, onDone, notify }: { profile: UserProfile; onDone:
         imageUrl: beforeUrl,
         image_before_url: beforeUrl,
         image_after_url: afterUrl,
-        trash_type: draft.trashType,
+        trash_type: inferredType,
         latitude: draft.latitude ?? SCHOOL.lat,
         longitude: draft.longitude ?? SCHOOL.lon,
         timestamp: Date.now(),
@@ -563,8 +565,9 @@ function ReportPage({ profile, onDone, notify }: { profile: UserProfile; onDone:
         aiCategory: review.category,
         aiReviewStatus: approved ? "auto_approved" : "needs_review",
         aiEstimatedKg: review.estimated_kg,
-        aiReason: approved ? "AI xác nhận ảnh và phân loại phù hợp." : "Cần Ban thi đua kiểm tra lại.",
+        aiReason: review.reason || (approved ? "AI xác nhận ảnh trước và sau." : "Cần Ban thi đua kiểm tra lại."),
         aiAutoApproved: approved,
+        aiAfterIsDisposed: review.after_is_disposed,
         aiAnalyzedAt: Date.now()
       };
       const id = profile.demo ? `demo-${Date.now()}` : await createReport(report);
@@ -584,32 +587,26 @@ function ReportPage({ profile, onDone, notify }: { profile: UserProfile; onDone:
     setStatus("Bản nháp đã được xóa.");
   };
 
-  const step = !draft.beforeFile ? 1 : !draft.trashType ? 2 : !draft.afterFile ? 3 : 4;
+  const step = !draft.beforeFile ? 1 : !draft.afterFile ? 2 : 3;
   return (
     <div className="report-page">
       <section className="report-intro">
         <span className="eyebrow">XÁC THỰC THU GOM</span>
         <h1>Hai ảnh. Một hành động thật.</h1>
         <p>Bản nháp được giữ 48 giờ, vì vậy bạn có thể chụp hiện trạng rồi tiếp tục khi đã tới đúng thùng rác.</p>
-        <div className="stepper">{["Hiện trạng", "Phân loại", "Trong thùng", "Hoàn tất"].map((label, index) => <div className={step > index ? "active" : ""} key={label}><i>{step > index + 1 ? <Check size={14} /> : index + 1}</i><span>{label}</span></div>)}</div>
+        <div className="stepper">{["Hiện trạng", "Tới thùng", "AI xác thực"].map((label, index) => <div className={step > index ? "active" : ""} key={label}><i>{step > index + 1 ? <Check size={14} /> : index + 1}</i><span>{label}</span></div>)}</div>
       </section>
 
       <section className="report-form">
         <label className="field-label">Tên người báo cáo<input value={draft.reporterName} onChange={(e) => setDraft((current) => ({ ...current, reporterName: e.target.value }))} placeholder="Nhập họ và tên" /></label>
         <div className="photo-grid">
           <PhotoCard title="Ảnh trước" subtitle="Rác tại hiện trường" file={draft.beforeFile} onClick={() => beforeRef.current?.click()} done={!!draft.beforeFile} />
-          <PhotoCard title="Ảnh sau" subtitle={draft.trashType === "recyclable" ? "Trong thùng tái chế" : "Trong thùng lớp/hố rác"} file={draft.afterFile} onClick={() => draft.beforeFile && draft.trashType ? afterRef.current?.click() : notify("Chụp ảnh trước và chọn loại rác trước.", "error")} done={!!draft.afterFile} disabled={!draft.beforeFile || !draft.trashType} />
+          <PhotoCard title="Ảnh minh chứng" subtitle="Rác đã ở trong/ trước thùng phù hợp" file={draft.afterFile} onClick={() => draft.beforeFile ? afterRef.current?.click() : notify("Hãy chụp ảnh hiện trạng trước.", "error")} done={!!draft.afterFile} disabled={!draft.beforeFile} />
           <input ref={beforeRef} className="visually-hidden" type="file" accept="image/*" capture="environment" onChange={setPhoto("before")} />
           <input ref={afterRef} className="visually-hidden" type="file" accept="image/*" capture="environment" onChange={setPhoto("after")} />
         </div>
 
-        <div className="trash-choice">
-          <h2>Chọn loại rác</h2>
-          <div className="choice-grid">
-            <button className={draft.trashType === "recyclable" ? "selected" : ""} onClick={() => setDraft((current) => ({ ...current, trashType: "recyclable" }))}><Recycle size={24} /><span><strong>Rác tái chế</strong><small>Chai nhựa, lon, giấy, carton</small></span><Check size={18} /></button>
-            <button className={draft.trashType === "household" ? "selected" : ""} onClick={() => setDraft((current) => ({ ...current, trashType: "household" }))}><Leaf size={24} /><span><strong>Rác sinh hoạt</strong><small>Vỏ kẹo, hộp xốp, thức ăn</small></span><Check size={18} /></button>
-          </div>
-        </div>
+        <div className="ai-auto-classify"><Sparkles size={20} /><div><strong>AI tự phân loại</strong><span>Gemini sẽ nhận diện chai, lon, giấy, rác sinh hoạt và tự chọn thùng phù hợp từ hai ảnh.</span></div></div>
 
         <div className="verification-row">
           <button className="location-button" onClick={getLocation}><LocateFixed size={20} /><span><strong>{draft.latitude ? "Đã lấy tọa độ" : "Lấy vị trí GPS"}</strong><small>{draft.latitude ? `${draft.latitude.toFixed(5)}, ${draft.longitude?.toFixed(5)}` : "Bắt buộc khi gửi báo cáo thật"}</small></span></button>

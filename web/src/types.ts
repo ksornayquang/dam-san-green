@@ -32,6 +32,7 @@ export interface TrashReport {
   aiEstimatedKg: number;
   aiReason: string;
   aiAutoApproved: boolean;
+  aiAfterIsDisposed: boolean;
   aiAnalyzedAt: number;
 }
 
@@ -40,6 +41,9 @@ export interface AiReview {
   trash_name: string;
   category: "RECYCLABLE" | "NON_RECYCLABLE";
   estimated_kg: number;
+  after_is_disposed: boolean;
+  confidence: number;
+  reason: string;
 }
 
 export interface ReportDraft {

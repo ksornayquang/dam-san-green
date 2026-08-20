@@ -4,16 +4,21 @@ import { auth } from "./firebase";
 const apiBase = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
 
 async function authenticatedFetch(path: string, init: RequestInit) {
-  if (!apiBase) {
-    throw new Error("Chưa cấu hình VITE_API_BASE_URL cho dịch vụ ảnh và AI.");
-  }
   const token = await auth.currentUser?.getIdToken();
   const headers = new Headers(init.headers);
   if (token) headers.set("Authorization", `Bearer ${token}`);
   const response = await fetch(`${apiBase}${path}`, { ...init, headers });
   if (!response.ok) {
     const message = await response.text();
-    throw new Error(message || `Máy chủ trả về lỗi ${response.status}`);
+    try {
+      const payload = JSON.parse(message) as { error?: string };
+      throw new Error(payload.error || message || `Máy chủ trả về lỗi ${response.status}`);
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        throw new Error(message || `Máy chủ trả về lỗi ${response.status}`);
+      }
+      throw error;
+    }
   }
   return response;
 }
@@ -27,9 +32,10 @@ export async function uploadImage(file: File, stage: "before" | "after"): Promis
   return payload.secure_url;
 }
 
-export async function analyzeImage(file: File): Promise<AiReview> {
+export async function analyzeImages(beforeFile: File, afterFile: File): Promise<AiReview> {
   const body = new FormData();
-  body.append("file", file);
+  body.append("before", beforeFile);
+  body.append("after", afterFile);
   const response = await authenticatedFetch("/api/analyze", { method: "POST", body });
   return response.json() as Promise<AiReview>;
 }

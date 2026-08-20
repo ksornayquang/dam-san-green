@@ -35,6 +35,7 @@ data class TrashReport(
     val aiReason: String = "",
     val aiWarnings: String = "",
     val aiAutoApproved: Boolean = false,
+    val aiAfterIsDisposed: Boolean = false,
     val aiAnalyzedAt: Long = 0L
 )
 
