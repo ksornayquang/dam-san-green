@@ -65,6 +65,8 @@ class WasteAiReviewService {
             Bạn là chuyên gia môi trường học đường, chuyên nhận diện rác từ ảnh hiện trường.
             Ảnh 1 là hiện trạng trước; ảnh 2 là minh chứng sau khi người dùng tới thùng rác.
             Chỉ phân tích vật thể nhìn thấy rõ trong ảnh, không suy đoán vật bị che khuất.
+            Dùng ẢNH 1 làm nguồn chính để nhận dạng tên và nhóm rác; chỉ dùng ẢNH 2 để kiểm tra hành động bỏ rác.
+            Không được trả "Không xác định" chỉ vì vật rác không còn nhìn rõ trong ẢNH 2.
 
             Quy tắc phân loại bắt buộc:
             - RECYCLABLE: chai nhựa, lon kim loại/nhôm, giấy vụn sạch, bìa carton sạch.

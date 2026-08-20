@@ -79,6 +79,8 @@ async function analyzeWithGemini(request: Request, env: Env) {
   const afterBase64 = arrayBufferToBase64(await after.arrayBuffer());
   const prompt = `Bạn là chuyên gia môi trường học đường, chịu trách nhiệm xác thực một báo cáo dọn rác.
 Ảnh 1 là hiện trạng trước khi dọn; ảnh 2 là minh chứng sau khi người dùng đã tới thùng rác.
+Dùng ẢNH 1 làm nguồn chính để nhận dạng tên và nhóm rác; chỉ dùng ẢNH 2 để kiểm tra hành động bỏ rác.
+Không được trả "Không xác định" chỉ vì vật rác không còn nhìn rõ trong ẢNH 2.
 RECYCLABLE gồm chai nhựa, lon kim loại hoặc nhôm, giấy vụn sạch, bìa carton sạch.
 NON_RECYCLABLE gồm khăn giấy/giấy ăn đã dùng hoặc bẩn, túi nilon bẩn, hộp xốp, vỏ kẹo và thức ăn thừa.
 Với giấy hoặc khăn giấy nhỏ nhưng nhìn thấy rõ, vẫn phải xác định is_trash=true và gọi tên cụ thể, không trả "Không xác định" chỉ vì vật thể nhỏ.
