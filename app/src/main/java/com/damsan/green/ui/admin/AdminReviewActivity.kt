@@ -240,10 +240,12 @@ class AdminReviewReportAdapter(
             }
             tvAiConfidence.text = if (report.aiConfidence > 0) "${report.aiConfidence}%" else "—"
             tvAiReviewSummary.text = buildString {
-                append(report.aiWasteType.displayWasteType())
+                append(report.aiTrashName.ifBlank { report.aiWasteType.displayWasteType() })
+                if (report.aiCategory.isNotBlank()) append(" · ${report.aiCategory.displayAiCategory()}")
                 if (report.trashType.isNotBlank()) append(if (report.trashType == "recyclable") " · Tái chế · 2 ảnh" else " · Sinh hoạt · 2 ảnh")
                 if (report.aiDetectedItems > 0) append(" · ${report.aiDetectedItems} món")
                 if (report.aiEstimatedKg > 0.0) append(" · ${report.aiEstimatedKg.formatKg()} kg")
+                if (report.aiConfidence > 0) append(" · AI ${report.aiConfidence}%")
                 if (report.demoMode) append(" · DEMO NGOÀI TRƯỜNG")
                 append(" · +${report.points}đ")
             }
@@ -268,6 +270,12 @@ private fun String.displayWasteType(): String {
         "unclear" -> "Chưa rõ loại rác"
         else -> ifBlank { "Chưa rõ loại rác" }
     }
+}
+
+private fun String.displayAiCategory(): String = when (this) {
+    "RECYCLABLE" -> "Tái chế"
+    "NON_RECYCLABLE" -> "Sinh hoạt"
+    else -> this
 }
 
 private fun Double.formatKg(): String {

@@ -716,11 +716,18 @@ function SchoolInfoPage({ onBack }: { onBack: () => void }) {
 }
 
 function RankingPage({ reports }: { reports: TrashReport[] }) {
-  const ranking = calculateRankings(reports);
+  const [period, setPeriod] = useState<"all" | "week" | "month">("all");
+  const ranking = calculateRankings(reports, period);
   const podium = [ranking[1], ranking[0], ranking[2]];
   return (
     <div className="ranking-page">
       <section className="page-heading"><span className="eyebrow">THI ĐUA TOÀN TRƯỜNG</span><h1>Bảng vàng Đam San</h1><p>Cập nhật trực tiếp từ các báo cáo đủ hai ảnh và đã được xác nhận.</p></section>
+      <section className="ranking-period-panel">
+        <div className="ranking-period-tabs" role="tablist" aria-label="Chu kỳ xếp hạng">
+          {([["all", "Tất cả"], ["week", "Tuần này"], ["month", "Tháng thi đua"]] as const).map(([value, label]) => <button key={value} className={period === value ? "active" : ""} onClick={() => setPeriod(value)} role="tab" aria-selected={period === value}>{label}</button>)}
+        </div>
+        <span>{rankingPeriodLabel(period)}</span>
+      </section>
       <section className="podium">
         {podium.map((item, index) => {
           const actualRank = index === 0 ? 2 : index === 1 ? 1 : 3;
@@ -764,7 +771,7 @@ function ProfilePage({ profile, reports, soundEnabled, onSound, onInstall, onLog
         <MenuRow icon={<Bell />} title="Thông báo" subtitle="Nhắc nhiệm vụ và kết quả duyệt" action={<span className="soon">Sắp có</span>} />
         <MenuRow icon={<Settings />} title="Quyền Camera và GPS" subtitle="Quản lý trong cài đặt trình duyệt" />
       </section>
-      {profile.role === "admin" && <section className="admin-review"><div className="list-head"><h2>Duyệt báo cáo</h2><span>{pending.length} đang chờ</span></div>{pending.length ? pending.slice(0, 10).map((item) => <div className="review-row" key={item.id}><img src={item.image_before_url || `${ASSET}img_placeholder_upload.png`} alt="" /><div><strong>{item.className} · {item.reporterName}</strong><span>{item.aiTrashName || "AI chưa xác định"} · {item.points} điểm đề xuất</span></div><div><button aria-label={`Từ chối báo cáo ${item.id}`} onClick={() => void review(item.id, "rejected")}><X size={16} /></button><button className="approve" aria-label={`Duyệt báo cáo ${item.id}`} onClick={() => void review(item.id, "approved")}><Check size={16} /></button></div></div>) : <EmptyState icon={<ShieldCheck size={44} />} title="Đã xử lý hết" text="Không còn báo cáo chờ duyệt." />}</section>}
+      {profile.role === "admin" && <section className="admin-review"><div className="list-head"><h2>Duyệt báo cáo</h2><span>{pending.length} đang chờ</span></div>{pending.length ? pending.slice(0, 10).map((item) => <div className="review-row" key={item.id}><img src={item.image_before_url || `${ASSET}img_placeholder_upload.png`} alt="" /><div><strong>{item.className} · {item.reporterName}</strong><span>{item.aiTrashName || "AI chưa xác định"} · {item.aiCategory === "RECYCLABLE" ? "Tái chế" : item.aiCategory === "NON_RECYCLABLE" ? "Sinh hoạt" : "Chưa rõ nhóm"} · AI {item.aiAnalyzedAt > 0 ? "đã chạy" : "chưa chạy"} · {item.points} điểm đề xuất</span></div><div><button aria-label={`Từ chối báo cáo ${item.id}`} onClick={() => void review(item.id, "rejected")}><X size={16} /></button><button className="approve" aria-label={`Duyệt báo cáo ${item.id}`} onClick={() => void review(item.id, "approved")}><Check size={16} /></button></div></div>) : <EmptyState icon={<ShieldCheck size={44} />} title="Đã xử lý hết" text="Không còn báo cáo chờ duyệt." />}</section>}
       <section className="history-panel"><div className="list-head"><h2>Lịch sử gần đây</h2><span>{own.length} báo cáo</span></div>{own.slice(0, 5).map((item) => <div className="history-row" key={item.id}><img src={item.image_before_url || `${ASSET}img_placeholder_upload.png`} alt="" /><div><strong>{item.aiTrashName || (item.trash_type === "recyclable" ? "Rác tái chế" : "Rác sinh hoạt")}</strong><span>{new Date(item.timestamp).toLocaleString("vi-VN")}</span></div><b className={item.status}>{item.status === "approved" ? `+${item.points}` : item.status === "pending" ? "Chờ duyệt" : "Từ chối"}</b></div>)}</section>
       <button className="logout-button" onClick={onLogout}><LogOut size={20} />Đăng xuất</button>
       <p className="version">Dam San Green PWA · Phiên bản 1.0</p>
@@ -820,9 +827,11 @@ function EmptyState({ icon, title, text }: { icon: ReactNode; title: string; tex
   return <div className="empty-state">{icon}<strong>{title}</strong><span>{text}</span></div>;
 }
 
-function calculateRankings(reports: TrashReport[]): Ranking[] {
+type RankingPeriod = "all" | "week" | "month";
+
+function calculateRankings(reports: TrashReport[], period: RankingPeriod = "all"): Ranking[] {
   const classes = new Map<string, Ranking>();
-  reports.filter((item) => item.status === "approved" && item.className && item.image_before_url && item.image_after_url && item.trash_type).forEach((report) => {
+  reports.filter((item) => item.status === "approved" && item.className && item.image_before_url && item.image_after_url && item.trash_type && isInRankingPeriod(item.timestamp, period)).forEach((report) => {
     const current = classes.get(report.className) ?? { className: report.className, totalPoints: 0, reportCount: 0, lastActivity: 0 };
     current.totalPoints += Math.max(0, report.points || 0);
     current.reportCount += 1;
@@ -830,6 +839,44 @@ function calculateRankings(reports: TrashReport[]): Ranking[] {
     classes.set(report.className, current);
   });
   return [...classes.values()].sort((a, b) => b.totalPoints - a.totalPoints || b.reportCount - a.reportCount || a.className.localeCompare(b.className));
+}
+
+function startOfWeek(timestamp: number): Date {
+  const date = new Date(timestamp);
+  date.setHours(0, 0, 0, 0);
+  const distance = (date.getDay() + 6) % 7;
+  date.setDate(date.getDate() - distance);
+  return date;
+}
+
+function cycleStart(timestamp: number): Date {
+  const week = startOfWeek(timestamp);
+  const yearStart = new Date(week.getFullYear(), 0, 1);
+  const firstMonday = new Date(yearStart);
+  firstMonday.setDate(yearStart.getDate() + ((8 - (yearStart.getDay() || 7)) % 7));
+  const weeks = Math.max(0, Math.floor((week.getTime() - firstMonday.getTime()) / (7 * 86400000)));
+  firstMonday.setDate(firstMonday.getDate() + Math.floor(weeks / 4) * 28);
+  return firstMonday;
+}
+
+function isInRankingPeriod(timestamp: number, period: RankingPeriod): boolean {
+  if (period === "all") return true;
+  const date = new Date(timestamp);
+  if (date.getDay() === 0) return false;
+  const currentWeek = startOfWeek(Date.now()).getTime();
+  const reportWeek = startOfWeek(timestamp).getTime();
+  if (period === "week") return reportWeek === currentWeek;
+  const start = cycleStart(Date.now()).getTime();
+  return reportWeek >= start && reportWeek <= start + 21 * 86400000;
+}
+
+function rankingPeriodLabel(period: RankingPeriod): string {
+  if (period === "all") return "Tất cả báo cáo đã duyệt · Realtime";
+  const start = period === "week" ? startOfWeek(Date.now()) : cycleStart(Date.now());
+  const end = new Date(start);
+  end.setDate(end.getDate() + (period === "week" ? 5 : 27));
+  const format = (date: Date) => date.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" });
+  return `${period === "week" ? "Thứ 2 - Thứ 7" : "Chu kỳ 4 tuần"} · ${format(start)} - ${format(end)} · Realtime`;
 }
 
 function distanceMeters(lat1: number, lon1: number, lat2: number, lon2: number): number {

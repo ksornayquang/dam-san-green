@@ -60,6 +60,59 @@
                 app:layout_constraintStart_toEndOf="@id/ivLeaderboardCrown"
                 app:layout_constraintTop_toTopOf="@id/btnBack" />
 
+            <LinearLayout
+                android:id="@+id/rankingPeriodControls"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnBack">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRankAll"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:minWidth="0dp"
+                    android:text="Tất cả"
+                    android:textAllCaps="false"
+                    android:textSize="11sp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRankWeek"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:minWidth="0dp"
+                    android:text="Tuần này"
+                    android:textAllCaps="false"
+                    android:textSize="11sp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRankMonth"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:minWidth="0dp"
+                    android:text="Tháng thi đua"
+                    android:textAllCaps="false"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvPeriodLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textColor="@color/eco_text_muted"
+                android:textSize="11sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rankingPeriodControls" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/podiumContainer"
                 android:layout_width="0dp"
@@ -68,7 +121,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnBack">
+                app:layout_constraintTop_toBottomOf="@id/tvPeriodLabel">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardTop2"

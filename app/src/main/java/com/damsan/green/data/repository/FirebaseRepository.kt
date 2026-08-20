@@ -256,7 +256,7 @@ class FirebaseRepository {
     // ===== LEADERBOARD =====
 
     // Tính bảng xếp hạng realtime
-    fun getLeaderboardFlow(): Flow<List<ClassRanking>> = callbackFlow {
+    fun getLeaderboardFlow(period: LeaderboardCalculator.Period = LeaderboardCalculator.Period.ALL_TIME): Flow<List<ClassRanking>> = callbackFlow {
         val ref = db.reference.child("TrashReports")
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -265,7 +265,7 @@ class FirebaseRepository {
                     val report = child.getValue(TrashReport::class.java) ?: continue
                     approvedReports += report
                 }
-                trySend(LeaderboardCalculator.calculate(approvedReports))
+                trySend(LeaderboardCalculator.calculate(approvedReports, period))
             }
             override fun onCancelled(error: DatabaseError) {
                 trySend(emptyList())

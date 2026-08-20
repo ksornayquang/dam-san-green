@@ -21,10 +21,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.damsan.green.R
 import com.damsan.green.data.model.ClassRanking
 import com.damsan.green.data.repository.FirebaseRepository
+import com.damsan.green.data.repository.LeaderboardCalculator
 import com.damsan.green.utils.HandlesOwnInsets
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
 import nl.dionsegijn.konfetti.core.emitter.Emitter
@@ -39,6 +41,8 @@ class LeaderboardActivity : AppCompatActivity(), HandlesOwnInsets {
     private lateinit var adapter: LeaderboardAdapter
     private var previousTop1: String? = null
     private var myClassName: String = ""
+    private var selectedPeriod = LeaderboardCalculator.Period.ALL_TIME
+    private var leaderboardJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +55,10 @@ class LeaderboardActivity : AppCompatActivity(), HandlesOwnInsets {
         recyclerView.adapter = adapter
 
         findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
+        findViewById<View>(R.id.btnRankAll).setOnClickListener { selectPeriod(LeaderboardCalculator.Period.ALL_TIME) }
+        findViewById<View>(R.id.btnRankWeek).setOnClickListener { selectPeriod(LeaderboardCalculator.Period.WEEK) }
+        findViewById<View>(R.id.btnRankMonth).setOnClickListener { selectPeriod(LeaderboardCalculator.Period.MONTH) }
+        updatePeriodControls()
 
         // Load tÃªn lá»›p hiá»‡n táº¡i
         val uid = repo.getCurrentUser()?.uid
@@ -64,7 +72,7 @@ class LeaderboardActivity : AppCompatActivity(), HandlesOwnInsets {
         val swipeRefreshLayout = findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipeRefreshLayout)
         swipeRefreshLayout.setOnRefreshListener {
             lifecycleScope.launch {
-                adapter.submitList(repo.getLeaderboardFlow().first())
+                adapter.submitList(repo.getLeaderboardFlow(selectedPeriod).first())
                 swipeRefreshLayout.isRefreshing = false
             }
         }
@@ -99,8 +107,9 @@ class LeaderboardActivity : AppCompatActivity(), HandlesOwnInsets {
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
 
     private fun observeLeaderboard() {
-        lifecycleScope.launch {
-            repo.getLeaderboardFlow().collectLatest { rankings ->
+        leaderboardJob?.cancel()
+        leaderboardJob = lifecycleScope.launch {
+            repo.getLeaderboardFlow(selectedPeriod).collectLatest { rankings ->
                 val swipeRefreshLayout = findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipeRefreshLayout)
                 swipeRefreshLayout.isRefreshing = false
                 adapter.submitList(rankings)
@@ -150,6 +159,29 @@ class LeaderboardActivity : AppCompatActivity(), HandlesOwnInsets {
                     }
                     previousTop1 = top1?.className
                 }
+            }
+        }
+    }
+
+    private fun selectPeriod(period: LeaderboardCalculator.Period) {
+        if (selectedPeriod == period) return
+        selectedPeriod = period
+        updatePeriodControls()
+        observeLeaderboard()
+    }
+
+    private fun updatePeriodControls() {
+        findViewById<TextView>(R.id.tvPeriodLabel)?.text = LeaderboardCalculator.periodLabel(selectedPeriod)
+        val active = 0xFF1E6B56.toInt()
+        val inactive = 0xFFFFFFFF.toInt()
+        listOf(
+            R.id.btnRankAll to LeaderboardCalculator.Period.ALL_TIME,
+            R.id.btnRankWeek to LeaderboardCalculator.Period.WEEK,
+            R.id.btnRankMonth to LeaderboardCalculator.Period.MONTH
+        ).forEach { (id, period) ->
+            findViewById<com.google.android.material.button.MaterialButton>(id)?.apply {
+                setBackgroundColor(if (selectedPeriod == period) active else inactive)
+                setTextColor(if (selectedPeriod == period) 0xFFFFFFFF.toInt() else 0xFF1E6B56.toInt())
             }
         }
     }
