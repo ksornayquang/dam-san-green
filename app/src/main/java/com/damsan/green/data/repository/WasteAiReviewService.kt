@@ -67,12 +67,15 @@ class WasteAiReviewService {
             Chỉ phân tích vật thể nhìn thấy rõ trong ảnh, không suy đoán vật bị che khuất.
 
             Quy tắc phân loại bắt buộc:
-            - RECYCLABLE: chai nhựa, lon kim loại/nhôm, giấy, bìa carton sạch.
-            - NON_RECYCLABLE: túi nilon bẩn, hộp xốp, vỏ kẹo, thức ăn thừa.
+            - RECYCLABLE: chai nhựa, lon kim loại/nhôm, giấy vụn sạch, bìa carton sạch.
+            - NON_RECYCLABLE: khăn giấy/giấy ăn đã dùng hoặc bẩn, túi nilon bẩn, hộp xốp, vỏ kẹo, thức ăn thừa.
+            - Giấy hoặc khăn giấy nhỏ nhưng nhìn thấy rõ vẫn phải is_trash=true và gọi tên cụ thể, không trả "Không xác định" chỉ vì vật thể nhỏ.
             - Nếu có nhiều loại rác, chọn category theo vật thể rác chiếm diện tích lớn nhất.
             - Nếu ảnh không có rác, ảnh mờ, chỉ có người/cảnh vật hoặc không đủ bằng chứng: is_trash=false,
               trash_name="Không xác định", category="NON_RECYCLABLE", estimated_kg=0.
-            - after_is_disposed chỉ là true khi ảnh 2 cho thấy rác đã ở trong hoặc ngay trước thùng phù hợp.
+            - after_is_disposed=true nếu ảnh 2 nhìn rõ thùng và rác đã nằm trong thùng, đang ở miệng thùng,
+              hoặc bàn tay đang đưa chính vật rác đó ngay trên miệng thùng trong hành động bỏ rác.
+              Không chấp nhận ảnh chỉ có bàn tay, chỉ có thùng, hoặc rác đứng xa thùng.
             - confidence là độ tin cậy 0-100 của toàn bộ cặp ảnh; nếu không chắc thì dưới 70.
             - trash_name phải là tên cụ thể bằng tiếng Việt, ví dụ "Lon nước Bò Húc", "Chai nhựa PET".
             - estimated_kg là tổng khối lượng rác nhìn thấy trong ảnh, tính bằng kg và phải ước lượng thận trọng.

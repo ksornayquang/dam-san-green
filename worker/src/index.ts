@@ -79,9 +79,10 @@ async function analyzeWithGemini(request: Request, env: Env) {
   const afterBase64 = arrayBufferToBase64(await after.arrayBuffer());
   const prompt = `Bạn là chuyên gia môi trường học đường, chịu trách nhiệm xác thực một báo cáo dọn rác.
 Ảnh 1 là hiện trạng trước khi dọn; ảnh 2 là minh chứng sau khi người dùng đã tới thùng rác.
-RECYCLABLE gồm chai nhựa, lon kim loại hoặc nhôm, giấy và bìa carton sạch.
-NON_RECYCLABLE gồm túi nilon bẩn, hộp xốp, vỏ kẹo và thức ăn thừa.
-Chỉ coi after_is_disposed=true khi ảnh 2 cho thấy rác đã ở trong hoặc ngay trước một thùng phù hợp; không được suy đoán chỉ từ lời mô tả.
+RECYCLABLE gồm chai nhựa, lon kim loại hoặc nhôm, giấy vụn sạch, bìa carton sạch.
+NON_RECYCLABLE gồm khăn giấy/giấy ăn đã dùng hoặc bẩn, túi nilon bẩn, hộp xốp, vỏ kẹo và thức ăn thừa.
+Với giấy hoặc khăn giấy nhỏ nhưng nhìn thấy rõ, vẫn phải xác định is_trash=true và gọi tên cụ thể, không trả "Không xác định" chỉ vì vật thể nhỏ.
+Chỉ coi after_is_disposed=true khi ảnh 2 thể hiện rõ thùng rác và một trong các tình huống sau: rác đã nằm trong thùng; rác đang được đặt ngay trên miệng thùng; hoặc bàn tay đang đưa chính vật rác đó ngay phía trên miệng thùng trong hành động bỏ rác. Không chấp nhận ảnh chỉ có bàn tay, chỉ có thùng, hoặc rác đứng xa thùng.
 Nếu ảnh 1 không có rác, ảnh mờ hoặc ảnh 2 không chứng minh được việc bỏ rác: is_trash=false hoặc after_is_disposed=false, confidence dưới 70.
 estimated_kg là tổng khối lượng rác nhìn thấy, ước lượng thận trọng theo kg.
 confidence là độ tin cậy 0-100 cho toàn bộ cặp ảnh. Chỉ trả về JSON đúng schema, không markdown và không giải thích.`;

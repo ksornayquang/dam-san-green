@@ -470,6 +470,7 @@ class ReportActivity : AppCompatActivity() {
                                     showSuccess(className, reportPoints)
                                 } else {
                                     val reason = aiReview.reason.ifBlank { "AI chưa xác nhận đủ ảnh trước và ảnh minh chứng sau." }
+                                    resetFormAfterSubmit()
                                     showPendingReview(reason)
                                 }
                             },
@@ -522,6 +523,30 @@ class ReportActivity : AppCompatActivity() {
         tvStatus.text = message
         showSnackbar(message, false)
     }
+
+    private fun resetFormAfterSubmit() {
+        beforePhotoUri = null
+        afterPhotoUri = null
+        currentPhotoUri = null
+        currentPhotoFile = null
+        trashType = null
+        captureStage = CaptureStage.BEFORE
+        currentLat = 0.0
+        currentLon = 0.0
+        ivPreview.setImageResource(R.drawable.img_placeholder_upload)
+        ivPreview.setPadding(dp(40), dp(40), dp(40), dp(40))
+        ImageViewCompat.setImageTintList(ivPreview, null)
+        ivAfterPreview.setImageDrawable(null)
+        afterPhotoCard.visibility = View.GONE
+        btnSubmit.isEnabled = false
+        btnSubmit.visibility = View.INVISIBLE
+        tvStepGuide.text = "BƯỚC 1/2  •  CHỤP HIỆN TRẠNG"
+        tvLocation.text = "Chụp ảnh để lấy tọa độ GPS..."
+        tvLocationIcon.setImageResource(R.drawable.ic_pin_3d)
+        etReporterName.text?.clear()
+    }
+
+    private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
 
     /** Converts the conservative AI mass estimate into an explainable 3-15 point score. */
     private fun pointsForEstimatedWaste(estimatedKg: Double): Int = when {
