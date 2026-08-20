@@ -117,6 +117,7 @@ function App() {
   const [soundEnabled, setSoundEnabled] = useState(() => localStorage.getItem("dsg-sound") !== "off");
   const [installEvent, setInstallEvent] = useState<InstallEvent | null>(null);
   const [showMenu, setShowMenu] = useState(false);
+  const isDownloadRoute = window.location.pathname.replace(/\/+$/, "") === "/download";
 
   useEffect(() => {
     const onInstall = (event: Event) => {
@@ -203,6 +204,21 @@ function App() {
       notify("iPhone: mở bằng Safari, bấm Chia sẻ rồi chọn Thêm vào Màn hình chính.");
     }
   };
+
+  if (isDownloadRoute) {
+    return <>
+      <DownloadLanding
+        onInstall={() => void handleInstall()}
+        onDemo={() => {
+          sessionStorage.setItem("dsg-demo", "true");
+          window.history.replaceState({}, "", "/");
+          setProfile(demoProfile);
+          setView("home");
+        }}
+      />
+      {toast && <div className="toast" role="status">{toast}</div>}
+    </>;
+  }
 
   if (!authReady) return <Splash />;
   if (!profile) {
@@ -297,6 +313,41 @@ function Splash() {
       <strong>Dam San Green</strong>
       <span>Đang kết nối hệ thống...</span>
     </div>
+  );
+}
+
+function DownloadLanding({ onInstall, onDemo }: { onInstall: () => void; onDemo: () => void }) {
+  return (
+    <main className="download-page">
+      <section className="download-hero">
+        <img src={`${ASSET}logo_damsan_green.png`} alt="Logo Dam San Green" />
+        <span>TRƯỜNG PTDTNT THPT ĐAM SAN</span>
+        <h1>Dam San Green</h1>
+        <p>Chọn cách trải nghiệm phù hợp với thiết bị của Hội đồng Giám khảo.</p>
+      </section>
+      <section className="download-options">
+        <a className="download-option android" href="/downloads/dam-san-green.apk" download>
+          <span><Download size={24} /></span>
+          <div><strong>Tải ứng dụng Android</strong><small>File APK · cài trực tiếp trên điện thoại Android</small></div>
+          <ChevronRight size={20} />
+        </a>
+        <button className="download-option pwa" onClick={onInstall}>
+          <span><Sparkles size={24} /></span>
+          <div><strong>Cài ứng dụng Web</strong><small>Dùng được trên Android và iPhone · không cần APK</small></div>
+          <ChevronRight size={20} />
+        </button>
+        <button className="download-option demo" onClick={onDemo}>
+          <span><Trophy size={24} /></span>
+          <div><strong>Mở bản trình diễn BGK</strong><small>Xem dữ liệu mẫu, bản đồ, báo cáo và bảng vàng</small></div>
+          <ChevronRight size={20} />
+        </button>
+      </section>
+      <section className="install-help">
+        <strong>Cài trên iPhone</strong>
+        <p>Mở trang bằng Safari, chọn Chia sẻ, sau đó chọn “Thêm vào Màn hình chính”.</p>
+      </section>
+      <p className="download-security"><ShieldCheck size={16} />Bản demo không làm thay đổi dữ liệu thi đua thật.</p>
+    </main>
   );
 }
 
